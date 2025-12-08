@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { SpacingScale, SpacingValue } from '@/components/tokens/SpacingVisual';
 import { RadiusScale, RadiusValue } from '@/components/tokens/RadiusCurveIcon';
+import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 /** Category card data */
 interface PrimitiveCategory {
@@ -272,14 +273,16 @@ export default function PrimitivesPage() {
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: '#3b82f620',
+              backgroundColor: 'rgba(var(--color-brand-rgb), 0.1)',
+              border: '1px solid rgba(var(--color-brand-rgb), 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              color: 'var(--color-brand)',
             }}
           >
-            <Hash size={28} style={{ color: '#3b82f6' }} />
+            <Hash size={28} />
           </div>
 
           <div>
@@ -319,10 +322,10 @@ export default function PrimitivesPage() {
         }}
       >
         {[
-          { label: 'Total Tokens', value: '308', color: '#3b82f6' },
-          { label: 'Color Families', value: '22', color: '#10b981' },
-          { label: 'Spacing Values', value: '31', color: '#8b5cf6' },
-          { label: 'Categories', value: '7', color: '#f59e0b' },
+          { label: 'Total Tokens', value: '308' },
+          { label: 'Color Families', value: '22' },
+          { label: 'Spacing Values', value: '31' },
+          { label: 'Categories', value: '7' },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -338,13 +341,13 @@ export default function PrimitivesPage() {
               style={{
                 fontSize: 'var(--font-size-h4)',
                 fontWeight: 700,
-                color: stat.color,
+                color: 'var(--color-brand)',
                 marginBottom: 'var(--spacing-1)',
               }}
             >
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -443,6 +446,7 @@ export default function PrimitivesPage() {
                         opacity: 0,
                         transform: 'translateX(-4px)',
                         transition: 'all var(--duration-150) var(--ease-out)',
+                        color: 'var(--color-brand)',
                       }}
                       className="arrow-icon"
                     />
@@ -472,8 +476,8 @@ export default function PrimitivesPage() {
       {/* Architecture Note */}
       <div
         style={{
-          backgroundColor: '#3b82f610',
-          border: '1px solid #3b82f630',
+          backgroundColor: 'rgba(68, 75, 140, 0.05)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
         }}
@@ -482,7 +486,7 @@ export default function PrimitivesPage() {
           style={{
             fontSize: 'var(--font-size-body)',
             fontWeight: 600,
-            color: '#3b82f6',
+            color: 'var(--color-secondary)',
             marginBottom: 'var(--spacing-2)',
           }}
         >
@@ -490,7 +494,7 @@ export default function PrimitivesPage() {
         </h3>
         <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-foreground)', lineHeight: 'var(--line-height-relaxed)', marginBottom: 'var(--spacing-3)' }}>
           Primitives are the lowest layer in our token architecture. They contain raw, literal values 
-          that never reference other tokens. Semantic tokens (like <code style={{ backgroundColor: 'var(--color-background)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'ui-monospace, monospace', fontSize: '0.9em' }}>--color-brand</code>) reference 
+          that never reference other tokens. Semantic tokens (like <TokenCopyButton value="--color-brand" variant="muted" />) reference 
           these primitives to create meaningful, context-aware tokens.
         </p>
         {/* Token Chain: Raw Value → Primitive → Semantic */}
@@ -519,13 +523,13 @@ export default function PrimitivesPage() {
               alignItems: 'center',
               gap: 'var(--spacing-1)',
               padding: 'var(--spacing-1) var(--spacing-2)',
-              backgroundColor: '#3b82f610',
-              border: '1px solid #3b82f630',
+              backgroundColor: 'rgba(68, 75, 140, 0.08)',
+              border: '1px solid rgba(68, 75, 140, 0.15)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Hash size={12} style={{ color: '#3b82f6' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#3b82f6', fontWeight: 500 }}>
+            <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>
               Emerald.500
             </span>
           </div>
@@ -537,13 +541,13 @@ export default function PrimitivesPage() {
               alignItems: 'center',
               gap: 'var(--spacing-1)',
               padding: 'var(--spacing-1) var(--spacing-2)',
-              backgroundColor: '#10b98110',
-              border: '1px solid #10b98130',
+              backgroundColor: 'rgba(42, 175, 184, 0.08)',
+              border: '1px solid rgba(42, 175, 184, 0.2)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Sparkles size={12} style={{ color: '#10b981' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: '#10b981' }}>
+            <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: 'var(--color-brand)' }}>
               Color.Brand
             </span>
           </div>

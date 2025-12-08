@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { TokenLayer, TOKEN_LAYER_INFO } from '@/lib/types';
+import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 // =============================================================================
 // TYPES
@@ -58,7 +59,7 @@ const BUTTON_TOKENS: ComponentSection = {
   name: 'Button',
   description: 'Interactive button component tokens for primary, secondary, and outline variants',
   icon: <MousePointer2 size={20} />,
-  iconColor: '#f59e0b',
+  iconColor: '#f59e0b', // Keeping icon color for identification but will use standard colors for UI
   variants: [
     {
       id: 'button-default',
@@ -429,90 +430,6 @@ const ALL_COMPONENTS: ComponentSection[] = [BUTTON_TOKENS, CARD_TOKENS, INPUT_TO
 // HELPER COMPONENTS
 // =============================================================================
 
-function CopyButton({ value, size = 'md' }: { value: string; size?: 'sm' | 'md' }) {
-  const [copied, setCopied] = useState(false);
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top - 8 });
-      }
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setTooltipPos(null);
-      }, 1500);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const iconSize = size === 'sm' ? 12 : 14;
-  const buttonSize = size === 'sm' ? 24 : 28;
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        onClick={handleCopy}
-        title={copied ? undefined : `Copy ${value}`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: buttonSize,
-          height: buttonSize,
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--color-card-border)',
-          backgroundColor: 'var(--color-card)',
-          color: 'var(--color-muted)',
-          cursor: 'pointer',
-          transition: 'all var(--duration-100) var(--ease-out)',
-          flexShrink: 0,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-brand)';
-          e.currentTarget.style.color = 'var(--color-brand)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-card-border)';
-          e.currentTarget.style.color = 'var(--color-muted)';
-        }}
-      >
-        <Copy size={iconSize} />
-      </button>
-      {copied && tooltipPos && typeof document !== 'undefined' && ReactDOM.createPortal(
-        <div
-          style={{
-            position: 'fixed',
-            left: tooltipPos.x,
-            top: tooltipPos.y,
-            transform: 'translate(-50%, -100%)',
-            padding: '6px 10px',
-            backgroundColor: '#1e293b',
-            color: '#ffffff',
-            fontSize: '12px',
-            fontWeight: 500,
-            borderRadius: '6px',
-            whiteSpace: 'nowrap',
-            zIndex: 9999,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            pointerEvents: 'none',
-            animation: 'tooltipFadeIn 0.15s ease-out',
-          }}
-        >
-          Copied!
-        </div>,
-        document.body
-      )}
-    </>
-  );
-}
-
 function ReferenceChain({ token }: { token: ComponentToken }) {
   // Flow: Value → Primitive → Semantic → Component
   return (
@@ -544,13 +461,13 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
               alignItems: 'center',
               gap: 'var(--spacing-1)',
               padding: '2px 6px',
-              backgroundColor: '#3b82f610',
-              border: '1px solid #3b82f630',
+              backgroundColor: 'rgba(68, 75, 140, 0.08)',
+              border: '1px solid rgba(68, 75, 140, 0.15)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Hash size={10} style={{ color: '#3b82f6' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#3b82f6', fontWeight: 500 }}>
+            <Hash size={10} style={{ color: 'var(--color-secondary)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>
               {token.primitiveRef}
             </span>
           </div>
@@ -567,13 +484,13 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
               alignItems: 'center',
               gap: 'var(--spacing-1)',
               padding: '2px 6px',
-              backgroundColor: '#10b98110',
-              border: '1px solid #10b98130',
+              backgroundColor: 'rgba(42, 175, 184, 0.08)',
+              border: '1px solid rgba(42, 175, 184, 0.2)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Sparkles size={10} style={{ color: '#10b981' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#10b981', fontWeight: 500 }}>
+            <Sparkles size={10} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', fontWeight: 500 }}>
               {token.semanticRef}
             </span>
           </div>
@@ -588,8 +505,8 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
           alignItems: 'center',
           gap: 'var(--spacing-1)',
           padding: '2px 6px',
-          backgroundColor: '#f59e0b10',
-          border: '1px solid #f59e0b30',
+          backgroundColor: 'rgba(245, 158, 11, 0.08)',
+          border: '1px solid rgba(245, 158, 11, 0.2)',
           borderRadius: 'var(--radius-md)',
         }}
       >
@@ -641,7 +558,7 @@ function TokenRow({ token }: { token: ComponentToken }) {
       className="token-row"
       style={{
         display: 'grid',
-        gridTemplateColumns: token.type === 'color' ? '48px 1fr 1fr auto' : '1fr 1fr auto',
+        gridTemplateColumns: token.type === 'color' ? '48px 2fr 1.5fr' : '2fr 1.5fr',
         gap: 'var(--spacing-4)',
         alignItems: 'center',
         padding: 'var(--spacing-3) var(--spacing-4)',
@@ -655,7 +572,7 @@ function TokenRow({ token }: { token: ComponentToken }) {
       
       {/* Token Info */}
       <div style={{ minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>
           <span style={{ fontSize: 'var(--font-size-body-small)', fontWeight: 600, color: 'var(--color-foreground)' }}>
             {token.name}
           </span>
@@ -672,37 +589,21 @@ function TokenRow({ token }: { token: ComponentToken }) {
             {token.type}
           </span>
         </div>
-        <div
-          style={{
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'ui-monospace, monospace',
-            color: 'var(--color-muted)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {token.cssVariable}
+        
+        {/* CSS Variable as Copy Button */}
+        <div>
+          <TokenCopyButton 
+            value={`var(${token.cssVariable})`} 
+            displayValue={token.cssVariable}
+            variant="primary" 
+          />
         </div>
       </div>
       
       {/* Reference Chain */}
       <div>
         <ReferenceChain token={token} />
-        <div
-          style={{
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'ui-monospace, monospace',
-            color: 'var(--color-foreground)',
-            marginTop: 'var(--spacing-1)',
-          }}
-        >
-          {token.resolvedValue}
-        </div>
       </div>
-      
-      {/* Copy Button */}
-      <CopyButton value={`var(${token.cssVariable})`} size="sm" />
     </div>
   );
 }
@@ -925,14 +826,16 @@ export default function ComponentTokensPage() {
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: '#f59e0b20',
+              backgroundColor: 'rgba(var(--color-brand-rgb), 0.1)',
+              border: '1px solid rgba(var(--color-brand-rgb), 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              color: 'var(--color-brand)',
             }}
           >
-            <Box size={28} style={{ color: '#f59e0b' }} />
+            <Box size={28} />
           </div>
 
           <div>
@@ -971,10 +874,10 @@ export default function ComponentTokensPage() {
         }}
       >
         {[
-          { label: 'Components', value: ALL_COMPONENTS.length.toString(), color: '#f59e0b' },
-          { label: 'Variants', value: totalVariants.toString(), color: '#8b5cf6' },
-          { label: 'Total Tokens', value: totalTokens.toString(), color: '#10b981' },
-          { label: 'Layer', value: '4 of 5', color: '#3b82f6' },
+          { label: 'Components', value: ALL_COMPONENTS.length.toString() },
+          { label: 'Variants', value: totalVariants.toString() },
+          { label: 'Total Tokens', value: totalTokens.toString() },
+          { label: 'Layer', value: '4 of 5' },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -990,13 +893,13 @@ export default function ComponentTokensPage() {
               style={{
                 fontSize: 'var(--font-size-h4)',
                 fontWeight: 700,
-                color: stat.color,
+                color: 'var(--color-brand)',
                 marginBottom: 'var(--spacing-1)',
               }}
             >
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -1006,8 +909,8 @@ export default function ComponentTokensPage() {
       {/* Reference Chain Example */}
       <div
         style={{
-          backgroundColor: '#f59e0b10',
-          border: '1px solid #f59e0b30',
+          backgroundColor: 'rgba(245, 158, 11, 0.05)',
+          border: '1px solid rgba(245, 158, 11, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
           marginBottom: 'var(--spacing-8)',
@@ -1035,19 +938,19 @@ export default function ComponentTokensPage() {
           </div>
           <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
           {/* Primitive */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: '#3b82f610', border: '1px solid #3b82f630', borderRadius: 'var(--radius-md)' }}>
-            <Hash size={12} style={{ color: '#3b82f6' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#3b82f6', fontWeight: 500 }}>Emerald.400</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(68, 75, 140, 0.08)', border: '1px solid rgba(68, 75, 140, 0.15)', borderRadius: 'var(--radius-md)' }}>
+            <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>Emerald.400</span>
           </div>
           <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
           {/* Semantic */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: '#10b98110', border: '1px solid #10b98130', borderRadius: 'var(--radius-md)' }}>
-            <Sparkles size={12} style={{ color: '#10b981' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#10b981', fontWeight: 500 }}>Color.Brand.Default</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(42, 175, 184, 0.08)', border: '1px solid rgba(42, 175, 184, 0.2)', borderRadius: 'var(--radius-md)' }}>
+            <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', fontWeight: 500 }}>Color.Brand.Default</span>
           </div>
           <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
           {/* Component */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: '#f59e0b10', border: '1px solid #f59e0b30', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 'var(--radius-md)' }}>
             <Box size={12} style={{ color: '#f59e0b' }} />
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#f59e0b', fontWeight: 500 }}>Button.Background</span>
           </div>
@@ -1065,7 +968,8 @@ export default function ComponentTokensPage() {
                   width: 48,
                   height: 48,
                   borderRadius: 'var(--radius-lg)',
-                  backgroundColor: `${component.iconColor}15`,
+                  backgroundColor: 'var(--color-background)',
+                  border: '1px solid var(--color-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1126,8 +1030,8 @@ export default function ComponentTokensPage() {
       {/* Architecture Note */}
       <div
         style={{
-          backgroundColor: '#f59e0b10',
-          border: '1px solid #f59e0b30',
+          backgroundColor: 'rgba(245, 158, 11, 0.05)',
+          border: '1px solid rgba(245, 158, 11, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
           marginTop: 'var(--spacing-10)',
@@ -1146,7 +1050,7 @@ export default function ComponentTokensPage() {
         <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-foreground)', lineHeight: 'var(--line-height-relaxed)', marginBottom: 'var(--spacing-3)' }}>
           Component tokens provide a concrete API for styling UI components. Instead of applying 
           semantic tokens directly, components use their own tokens like 
-          <code style={{ backgroundColor: 'var(--color-background)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'ui-monospace, monospace', fontSize: '0.9em', margin: '0 4px' }}>--component-button-background</code>. 
+          <TokenCopyButton value="--component-button-background" variant="muted" />. 
           This allows for component-specific customization while maintaining the overall design system.
         </p>
         <ul style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', paddingLeft: 'var(--spacing-4)', margin: 0, listStyleType: 'disc' }}>

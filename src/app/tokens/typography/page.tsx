@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Copy, Check, ChevronRight, Type, ArrowRight, Sparkles, Hash } from 'lucide-react';
+import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 // =============================================================================
 // DATA
@@ -53,62 +54,6 @@ const fontWeights = [
 ];
 
 // =============================================================================
-// COMPONENTS
-// =============================================================================
-
-function CopyField({ 
-  value, 
-  displayValue, 
-  variant = 'default' 
-}: { 
-  value: string; 
-  displayValue?: string; 
-  variant?: 'default' | 'primary' | 'muted';
-}) {
-  const [copied, setCopied] = useState(false);
-
-  const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const colors = {
-    default: { bg: 'rgba(100, 116, 139, 0.08)', bgHover: 'rgba(100, 116, 139, 0.15)', text: 'var(--color-foreground)' },
-    primary: { bg: 'rgba(42, 175, 184, 0.1)', bgHover: 'rgba(42, 175, 184, 0.2)', text: 'var(--color-brand)' },
-    muted: { bg: 'rgba(100, 116, 139, 0.08)', bgHover: 'rgba(100, 116, 139, 0.15)', text: 'var(--color-muted)' },
-  };
-
-  const style = colors[variant];
-
-  return (
-    <button
-      onClick={copyToClipboard}
-      className="inline-flex items-center gap-1.5 font-mono transition-all group"
-      style={{
-        fontSize: 'var(--font-size-caption)',
-        color: style.text,
-        backgroundColor: copied ? 'rgba(16, 185, 129, 0.15)' : style.bg,
-        padding: '4px 8px',
-        borderRadius: '6px',
-        border: 'none',
-        cursor: 'pointer',
-      }}
-      onMouseEnter={(e) => { if (!copied) e.currentTarget.style.backgroundColor = style.bgHover; }}
-      onMouseLeave={(e) => { if (!copied) e.currentTarget.style.backgroundColor = style.bg; }}
-      title={`Click to copy: ${value}`}
-    >
-      <span style={{ color: copied ? '#10B981' : style.text }}>{displayValue || value}</span>
-      {copied ? (
-        <Check className="w-3 h-3" style={{ color: '#10B981' }} />
-      ) : (
-        <Copy className="w-3 h-3 opacity-40 group-hover:opacity-70 transition-opacity" />
-      )}
-    </button>
-  );
-}
-
-// =============================================================================
 // MAIN
 // =============================================================================
 
@@ -136,14 +81,16 @@ export default function TypographyPage() {
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: 'rgba(68, 75, 140, 0.15)',
+              backgroundColor: 'rgba(68, 75, 140, 0.1)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              color: 'var(--color-secondary)',
             }}
           >
-            <Type size={28} style={{ color: '#444B8C' }} />
+            <Type size={28} />
           </div>
 
           <div>
@@ -168,10 +115,10 @@ export default function TypographyPage() {
         }}
       >
         {[
-          { label: 'Type Sizes', value: '11', color: '#444B8C' },
-          { label: 'Line Heights', value: '6', color: '#10b981' },
-          { label: 'Font Weights', value: '8', color: '#f59e0b' },
-          { label: 'Type Scales', value: '2', color: '#8b5cf6' },
+          { label: 'Type Sizes', value: '11' },
+          { label: 'Line Heights', value: '6' },
+          { label: 'Font Weights', value: '8' },
+          { label: 'Type Scales', value: '2' },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -183,10 +130,10 @@ export default function TypographyPage() {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 'var(--font-size-h4)', fontWeight: 700, color: stat.color, marginBottom: 'var(--spacing-1)' }}>
+            <div style={{ fontSize: 'var(--font-size-h4)', fontWeight: 700, color: 'var(--color-brand)', marginBottom: 'var(--spacing-1)' }}>
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -206,12 +153,12 @@ export default function TypographyPage() {
         <h3 style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-4)' }}>
           Type Scale Comparison
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-4)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-4)' }}>
           <div
             style={{
               padding: 'var(--spacing-4)',
               borderRadius: 'var(--radius-lg)',
-              backgroundColor: activeScale === 'ms' ? 'rgba(68, 75, 140, 0.1)' : 'var(--color-background)',
+              backgroundColor: activeScale === 'ms' ? 'rgba(68, 75, 140, 0.05)' : 'var(--color-background)',
               border: activeScale === 'ms' ? '1px solid rgba(68, 75, 140, 0.3)' : '1px solid transparent',
               cursor: 'pointer',
               transition: 'all var(--duration-150) var(--ease-out)',
@@ -224,7 +171,7 @@ export default function TypographyPage() {
                   width: 24,
                   height: 24,
                   borderRadius: 'var(--radius-full)',
-                  backgroundColor: activeScale === 'ms' ? '#444B8C' : 'var(--color-muted)',
+                  backgroundColor: activeScale === 'ms' ? 'var(--color-secondary)' : 'var(--color-muted)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -246,8 +193,8 @@ export default function TypographyPage() {
             style={{
               padding: 'var(--spacing-4)',
               borderRadius: 'var(--radius-lg)',
-              backgroundColor: activeScale === 'mt' ? 'rgba(139, 92, 246, 0.1)' : 'var(--color-background)',
-              border: activeScale === 'mt' ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid transparent',
+              backgroundColor: activeScale === 'mt' ? 'rgba(42, 175, 184, 0.05)' : 'var(--color-background)',
+              border: activeScale === 'mt' ? '1px solid rgba(42, 175, 184, 0.3)' : '1px solid transparent',
               cursor: 'pointer',
               transition: 'all var(--duration-150) var(--ease-out)',
             }}
@@ -259,7 +206,7 @@ export default function TypographyPage() {
                   width: 24,
                   height: 24,
                   borderRadius: 'var(--radius-full)',
-                  backgroundColor: activeScale === 'mt' ? '#8b5cf6' : 'var(--color-muted)',
+                  backgroundColor: activeScale === 'mt' ? 'var(--color-brand)' : 'var(--color-muted)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -285,7 +232,7 @@ export default function TypographyPage() {
           Type Scale
         </h2>
         <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          11 fluid sizes from caption to hero · Click to copy CSS variables
+          11 fluid sizes from caption to hero · Click variable to copy
         </p>
 
         <div
@@ -319,7 +266,7 @@ export default function TypographyPage() {
           {typeTokens.map((token, index) => (
             <div
               key={token.name}
-              className="grid items-center"
+              className="grid items-center hover:bg-[var(--color-background)] transition-colors"
               style={{
                 gridTemplateColumns: '1.5fr 0.8fr 0.8fr 2fr 0.5fr',
                 gap: 'var(--spacing-3)',
@@ -338,7 +285,7 @@ export default function TypographyPage() {
                 >
                   {token.name}
                 </span>
-                <CopyField
+                <TokenCopyButton
                   value={`var(${token.variable}--${activeScale})`}
                   displayValue={`${token.variable}--${activeScale}`}
                   variant="primary"
@@ -351,7 +298,7 @@ export default function TypographyPage() {
                 {activeScale === 'ms' ? token.msValue : token.mtValue}
               </div>
               <div>
-                <CopyField
+                <TokenCopyButton
                   value={activeScale === 'ms' ? token.msClamp : token.mtClamp}
                   variant="muted"
                 />
@@ -377,7 +324,7 @@ export default function TypographyPage() {
           Line Heights
         </h2>
         <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          6 unitless ratio values · Click to copy CSS variable
+          6 unitless ratio values · Click variable to copy
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {lineHeights.map((lh) => (
@@ -397,7 +344,7 @@ export default function TypographyPage() {
                 {lh.name}
               </p>
               <div style={{ marginBottom: 'var(--spacing-2)' }}>
-                <CopyField value={`var(${lh.variable})`} displayValue={lh.variable} variant="primary" />
+                <TokenCopyButton value={`var(${lh.variable})`} displayValue={lh.variable} variant="primary" />
               </div>
               <p style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
                 {lh.description}
@@ -430,10 +377,10 @@ export default function TypographyPage() {
                 {fw.name}
               </p>
               <div style={{ marginBottom: 'var(--spacing-2)' }}>
-                <CopyField value={`var(${fw.variable})`} displayValue={fw.variable} variant="primary" />
+                <TokenCopyButton value={`var(${fw.variable})`} displayValue={fw.variable} variant="primary" />
               </div>
               <div>
-                <CopyField value={fw.value} variant="muted" />
+                <TokenCopyButton value={fw.value} variant="muted" />
               </div>
             </div>
           ))}
