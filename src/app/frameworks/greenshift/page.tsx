@@ -326,22 +326,42 @@ function ReferenceChain({ token }: { token: GreenshiftToken }) {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', flexWrap: 'wrap' }}>
-      {/* Greenshift Layer */}
+      {/* Raw Value - hex or number first */}
       <span
         style={{
           padding: '2px 6px',
           borderRadius: 'var(--radius-sm)',
-          backgroundColor: `${greenshiftLayerInfo.color}15`,
-          color: greenshiftLayerInfo.color,
+          backgroundColor: 'var(--color-background)',
+          border: '1px solid var(--color-border)',
           fontSize: 'var(--font-size-caption)',
-          fontWeight: 500,
+          fontFamily: 'ui-monospace, monospace',
+          color: 'var(--color-foreground)',
         }}
       >
-        GRS
+        {token.resolvedValue}
       </span>
+      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+
+      {/* Primitive Layer (if exists) */}
+      {token.primitiveRef && (
+        <>
+          <span
+            style={{
+              padding: '2px 6px',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: `${primitivesLayerInfo.color}15`,
+              color: primitivesLayerInfo.color,
+              fontSize: 'var(--font-size-caption)',
+              fontWeight: 500,
+            }}
+          >
+            {token.primitiveRef}
+          </span>
+          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+        </>
+      )}
       
       {/* Semantic Layer */}
-      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
       <span
         style={{
           padding: '2px 6px',
@@ -355,24 +375,20 @@ function ReferenceChain({ token }: { token: GreenshiftToken }) {
         {token.semanticRef}
       </span>
       
-      {/* Primitive Layer (if exists) */}
-      {token.primitiveRef && (
-        <>
-          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
-          <span
-            style={{
-              padding: '2px 6px',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: `${primitivesLayerInfo.color}15`,
-              color: primitivesLayerInfo.color,
-              fontSize: 'var(--font-size-caption)',
-              fontWeight: 500,
-            }}
-          >
-            {token.primitiveRef}
-          </span>
-        </>
-      )}
+      {/* Greenshift Layer - framework output last */}
+      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+      <span
+        style={{
+          padding: '2px 6px',
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: `${greenshiftLayerInfo.color}15`,
+          color: greenshiftLayerInfo.color,
+          fontSize: 'var(--font-size-caption)',
+          fontWeight: 500,
+        }}
+      >
+        GRS
+      </span>
     </div>
   );
 }
@@ -434,16 +450,6 @@ function TokenRow({ token }: { token: GreenshiftToken }) {
       {/* Reference Chain */}
       <div>
         <ReferenceChain token={token} />
-        <div
-          style={{
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'ui-monospace, monospace',
-            color: 'var(--color-foreground)',
-            marginTop: 'var(--spacing-1)',
-          }}
-        >
-          {token.resolvedValue}
-        </div>
       </div>
       
       {/* Copy Button */}

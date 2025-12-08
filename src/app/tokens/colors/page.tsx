@@ -60,12 +60,19 @@ const SEMANTIC_COLORS: ColorGroup[] = [
   },
   {
     id: 'background',
-    name: 'Background & Surface',
-    description: 'Page backgrounds and elevated surfaces',
+    name: 'Background',
+    description: 'Page and section background colors',
     tokens: [
-      { name: 'Background', cssVariable: '--color-background', primitiveRef: 'Gray.50', resolvedHex: '#f9fafb' },
-      { name: 'Background Alt', cssVariable: '--color-background-alt', primitiveRef: 'Gray.100', resolvedHex: '#f3f4f6' },
-      { name: 'Surface', cssVariable: '--color-surface', primitiveRef: 'Base.White', resolvedHex: '#ffffff' },
+      { name: 'Default', cssVariable: '--color-background', primitiveRef: 'Gray.50', resolvedHex: '#f9fafb' },
+      { name: 'Alt', cssVariable: '--color-background-alt', primitiveRef: 'Gray.100', resolvedHex: '#f3f4f6' },
+    ],
+  },
+  {
+    id: 'surface',
+    name: 'Surface',
+    description: 'Elevated surface color (white)',
+    tokens: [
+      { name: 'Default', cssVariable: '--color-surface', primitiveRef: 'Base.White', resolvedHex: '#ffffff' },
     ],
   },
   {
@@ -104,9 +111,13 @@ const SEMANTIC_COLORS: ColorGroup[] = [
     description: 'Feedback and state indication colors',
     tokens: [
       { name: 'Success', cssVariable: '--color-success', primitiveRef: 'Green.500', resolvedHex: '#22c55e' },
+      { name: 'Success Light', cssVariable: '--color-success-light', primitiveRef: 'Green.100', resolvedHex: '#dcfce7' },
       { name: 'Warning', cssVariable: '--color-warning', primitiveRef: 'Amber.500', resolvedHex: '#f59e0b' },
+      { name: 'Warning Light', cssVariable: '--color-warning-light', primitiveRef: 'Amber.100', resolvedHex: '#fef3c7' },
       { name: 'Error', cssVariable: '--color-error', primitiveRef: 'Red.500', resolvedHex: '#ef4444' },
+      { name: 'Error Light', cssVariable: '--color-error-light', primitiveRef: 'Red.100', resolvedHex: '#fee2e2' },
       { name: 'Info', cssVariable: '--color-info', primitiveRef: 'Blue.500', resolvedHex: '#3b82f6' },
+      { name: 'Info Light', cssVariable: '--color-info-light', primitiveRef: 'Blue.100', resolvedHex: '#dbeafe' },
     ],
   },
   {
