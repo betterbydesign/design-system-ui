@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Copy, Check, ChevronRight, Type, ArrowRight, Sparkles, Hash } from 'lucide-react';
+import { Copy, Check, ChevronRight, Type, ArrowRight, Sparkles, Hash, Layers, ALargeSmall, Weight, Baseline } from 'lucide-react';
 import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 // =============================================================================
@@ -76,12 +76,13 @@ export default function TypographyPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
+          {/* H1 Page Icon Box - white bg, light thin border */}
           <div
             style={{
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: 'rgba(68, 75, 140, 0.1)',
+              backgroundColor: 'var(--color-card)',
               border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
@@ -94,7 +95,7 @@ export default function TypographyPage() {
           </div>
 
           <div>
-            <h1 style={{ fontSize: 'var(--font-size-h2)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-2)' }}>
+            <h1 style={{ fontSize: 'var(--font-size-h2)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-2)', lineHeight: 'var(--line-height-tight)' }}>
               Typography
             </h1>
             <p style={{ fontSize: 'var(--font-size-body)', color: 'var(--color-muted)', lineHeight: 'var(--line-height-relaxed)', maxWidth: '65ch' }}>
@@ -228,12 +229,30 @@ export default function TypographyPage() {
 
       {/* Type Scale Table */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Type Scale
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          11 fluid sizes from caption to hero · Click variable to copy
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <ALargeSmall size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Type Scale
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              11 fluid sizes from caption to hero · Click variable to copy
+            </p>
+          </div>
+        </div>
 
         <div
           style={{
@@ -320,12 +339,30 @@ export default function TypographyPage() {
 
       {/* Line Heights */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Line Heights
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          6 unitless ratio values · Click variable to copy
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Layers size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Line Heights
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              6 unitless ratio values · Click variable to copy
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {lineHeights.map((lh) => (
             <div
@@ -356,12 +393,30 @@ export default function TypographyPage() {
 
       {/* Font Weights */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Font Weights
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          8 weight values from thin (100) to black (900)
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Baseline size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Font Weights
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              8 weight values from thin (100) to black (900)
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {fontWeights.map((fw) => (
             <div

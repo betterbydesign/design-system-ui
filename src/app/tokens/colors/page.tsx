@@ -11,7 +11,9 @@ import {
   Sparkles,
   Hash,
   ExternalLink,
+  Layers,
 } from 'lucide-react';
+import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 // =============================================================================
 // TYPES
@@ -158,90 +160,6 @@ const PRIMITIVE_FAMILIES = [
 // HELPER COMPONENTS
 // =============================================================================
 
-function CopyButton({ value, size = 'md' }: { value: string; size?: 'sm' | 'md' }) {
-  const [copied, setCopied] = useState(false);
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top - 8 });
-      }
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setTooltipPos(null);
-      }, 1500);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const iconSize = size === 'sm' ? 12 : 14;
-  const buttonSize = size === 'sm' ? 24 : 28;
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        onClick={handleCopy}
-        title={copied ? undefined : `Copy ${value}`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: buttonSize,
-          height: buttonSize,
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--color-card-border)',
-          backgroundColor: 'var(--color-card)',
-          color: 'var(--color-muted)',
-          cursor: 'pointer',
-          transition: 'all var(--duration-100) var(--ease-out)',
-          flexShrink: 0,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-brand)';
-          e.currentTarget.style.color = 'var(--color-brand)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-card-border)';
-          e.currentTarget.style.color = 'var(--color-muted)';
-        }}
-      >
-        <Copy size={iconSize} />
-      </button>
-      {copied && tooltipPos && typeof document !== 'undefined' && ReactDOM.createPortal(
-        <div
-          style={{
-            position: 'fixed',
-            left: tooltipPos.x,
-            top: tooltipPos.y,
-            transform: 'translate(-50%, -100%)',
-            padding: '6px 10px',
-            backgroundColor: '#1e293b',
-            color: '#ffffff',
-            fontSize: '12px',
-            fontWeight: 500,
-            borderRadius: '6px',
-            whiteSpace: 'nowrap',
-            zIndex: 9999,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            pointerEvents: 'none',
-            animation: 'tooltipFadeIn 0.15s ease-out',
-          }}
-        >
-          Copied!
-        </div>,
-        document.body
-      )}
-    </>
-  );
-}
-
 function isLightColor(hex: string): boolean {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -283,13 +201,13 @@ function TokenChainDisplay({ primitiveRef, resolvedHex }: { primitiveRef: string
           alignItems: 'center',
           gap: 'var(--spacing-1)',
           padding: 'var(--spacing-1) var(--spacing-2)',
-          backgroundColor: '#3b82f610',
-          border: '1px solid #3b82f630',
+          backgroundColor: 'rgba(68, 75, 140, 0.08)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-md)',
         }}
       >
-        <Hash size={12} style={{ color: '#3b82f6' }} />
-        <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#3b82f6', fontWeight: 500 }}>
+        <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
+        <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>
           {primitiveRef}
         </span>
       </div>
@@ -303,13 +221,13 @@ function TokenChainDisplay({ primitiveRef, resolvedHex }: { primitiveRef: string
           alignItems: 'center',
           gap: 'var(--spacing-1)',
           padding: 'var(--spacing-1) var(--spacing-2)',
-          backgroundColor: '#10b98110',
-          border: '1px solid #10b98130',
+          backgroundColor: 'rgba(42, 175, 184, 0.08)',
+          border: '1px solid rgba(42, 175, 184, 0.2)',
           borderRadius: 'var(--radius-md)',
         }}
       >
-        <Sparkles size={12} style={{ color: '#10b981' }} />
-        <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: '#10b981' }}>
+        <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
+        <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: 'var(--color-brand)' }}>
           Semantic
         </span>
       </div>
@@ -318,18 +236,6 @@ function TokenChainDisplay({ primitiveRef, resolvedHex }: { primitiveRef: string
 }
 
 function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(`var(${token.cssVariable})`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
   return (
     <div
       className="color-swatch-token"
@@ -365,25 +271,16 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
 
       {/* Token Info */}
       <div style={{ padding: 'var(--spacing-3)' }}>
-        {/* Header with name and copy button */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--spacing-2)' }}>
+        {/* Header with name */}
+        <div style={{ marginBottom: 'var(--spacing-2)' }}>
           <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 600, color: 'var(--color-foreground)' }}>
             {token.name}
           </span>
-          <CopyButton value={`var(${token.cssVariable})`} size="sm" />
         </div>
 
-        {/* CSS Variable */}
-        <div
-          style={{
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'ui-monospace, monospace',
-            color: 'var(--color-muted)',
-            marginBottom: 'var(--spacing-3)',
-            wordBreak: 'break-all',
-          }}
-        >
-          {token.cssVariable}
+        {/* CSS Variable with copy */}
+        <div style={{ marginBottom: 'var(--spacing-3)' }}>
+          <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
         </div>
 
         {/* Reference Chain: Value → Primitive → Semantic */}
@@ -427,14 +324,36 @@ export default function ColorsPage() {
           </span>
         </div>
 
-        <h1 style={{ fontSize: 'var(--font-size-h2)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-2)' }}>
-          Color System
-        </h1>
-        <p style={{ fontSize: 'var(--font-size-body)', color: 'var(--color-muted)', lineHeight: 'var(--line-height-relaxed)', maxWidth: '65ch' }}>
-          Our color system is built in two layers: <strong>Primitives</strong> (raw color values) and 
-          <strong> Semantic</strong> tokens (role-based colors). Use semantic tokens in your designs for 
-          consistent theming and easier maintenance.
-        </p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
+          {/* H1 Page Icon Box - white bg, light thin border */}
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 'var(--radius-xl)',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: 'var(--color-secondary)',
+            }}
+          >
+            <Palette size={28} />
+          </div>
+
+          <div>
+            <h1 style={{ fontSize: 'var(--font-size-h2)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-2)', lineHeight: 'var(--line-height-tight)' }}>
+              Color System
+            </h1>
+            <p style={{ fontSize: 'var(--font-size-body)', color: 'var(--color-muted)', lineHeight: 'var(--line-height-relaxed)', maxWidth: '65ch' }}>
+              Our color system is built in two layers: <strong>Primitives</strong> (raw color values) and 
+              <strong> Semantic</strong> tokens (role-based colors). Use semantic tokens in your designs for 
+              consistent theming and easier maintenance.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Quick Stats */}
@@ -447,10 +366,10 @@ export default function ColorsPage() {
         }}
       >
         {[
-          { label: 'Semantic Tokens', value: totalTokens.toString(), color: '#10b981' },
-          { label: 'Color Roles', value: SEMANTIC_COLORS.length.toString(), color: '#8b5cf6' },
-          { label: 'Primitive Families', value: '22', color: '#3b82f6' },
-          { label: 'Total Primitives', value: '245', color: '#f59e0b' },
+          { label: 'Semantic Tokens', value: totalTokens.toString() },
+          { label: 'Color Roles', value: SEMANTIC_COLORS.length.toString() },
+          { label: 'Primitive Families', value: '22' },
+          { label: 'Total Primitives', value: '245' },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -462,10 +381,10 @@ export default function ColorsPage() {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 'var(--font-size-h4)', fontWeight: 700, color: stat.color, marginBottom: 'var(--spacing-1)' }}>
+            <div style={{ fontSize: 'var(--font-size-h4)', fontWeight: 700, color: 'var(--color-brand)', marginBottom: 'var(--spacing-1)' }}>
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -482,20 +401,9 @@ export default function ColorsPage() {
           marginBottom: 'var(--spacing-8)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-4)' }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: 'rgba(139, 92, 246, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Palette size={20} style={{ color: '#8b5cf6' }} />
-          </div>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-4)' }}>
+          {/* Callout icon - just icon, no background */}
+          <Layers size={20} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: 2 }} />
           <div>
             <h3 style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)' }}>
               Two-Layer Architecture
@@ -534,13 +442,13 @@ export default function ColorsPage() {
               alignItems: 'center',
               gap: 'var(--spacing-2)',
               padding: 'var(--spacing-2) var(--spacing-3)',
-              backgroundColor: '#3b82f610',
+              backgroundColor: 'rgba(68, 75, 140, 0.08)',
               borderRadius: 'var(--radius-lg)',
-              border: '1px solid #3b82f630',
+              border: '1px solid rgba(68, 75, 140, 0.15)',
             }}
           >
-            <Hash size={16} style={{ color: '#3b82f6' }} />
-            <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 500, color: '#3b82f6' }}>
+            <Hash size={16} style={{ color: 'var(--color-secondary)' }} />
+            <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 500, color: 'var(--color-secondary)' }}>
               Emerald.400
             </span>
           </div>
@@ -554,13 +462,13 @@ export default function ColorsPage() {
               alignItems: 'center',
               gap: 'var(--spacing-2)',
               padding: 'var(--spacing-2) var(--spacing-3)',
-              backgroundColor: '#10b98110',
+              backgroundColor: 'rgba(42, 175, 184, 0.08)',
               borderRadius: 'var(--radius-lg)',
-              border: '1px solid #10b98130',
+              border: '1px solid rgba(42, 175, 184, 0.2)',
             }}
           >
-            <Sparkles size={16} style={{ color: '#10b981' }} />
-            <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 500, color: '#10b981' }}>
+            <Sparkles size={16} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 500, color: 'var(--color-brand)' }}>
               Color.Brand.Default
             </span>
           </div>
@@ -572,8 +480,8 @@ export default function ColorsPage() {
         <div
           className="primitives-link-card"
           style={{
-            backgroundColor: '#3b82f610',
-            border: '1px solid #3b82f630',
+            backgroundColor: 'rgba(68, 75, 140, 0.05)',
+            border: '1px solid rgba(68, 75, 140, 0.15)',
             borderRadius: 'var(--radius-xl)',
             padding: 'var(--spacing-5)',
             marginBottom: 'var(--spacing-10)',
@@ -581,23 +489,11 @@ export default function ColorsPage() {
             transition: 'all var(--duration-150) var(--ease-out)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)' }}>
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 'var(--radius-lg)',
-                  backgroundColor: '#3b82f620',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Hash size={24} style={{ color: '#3b82f6' }} />
-              </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-3)' }}>
+              <Hash size={20} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: 2 }} />
               <div>
-                <h3 style={{ fontSize: 'var(--font-size-lead)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
+                <h3 style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)' }}>
                   Primitive Color Palettes
                 </h3>
                 <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
@@ -605,7 +501,7 @@ export default function ColorsPage() {
                 </p>
               </div>
             </div>
-            <ExternalLink size={20} style={{ color: '#3b82f6' }} />
+            <ExternalLink size={20} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: 2 }} />
           </div>
 
           {/* Color Family Preview */}
@@ -628,22 +524,23 @@ export default function ColorsPage() {
 
       {/* Semantic Color Tokens Section */}
       <section>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-6)' }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Sparkles size={20} style={{ color: '#10b981' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Sparkles size={20} />
           </div>
           <div>
-            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
               Semantic Color Tokens
             </h2>
             <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
@@ -848,8 +745,8 @@ export default function ColorsPage() {
           box-shadow: var(--shadow-md) !important;
         }
         .primitives-link-card:hover {
-          border-color: #3b82f6 !important;
-          background-color: #3b82f618 !important;
+          border-color: var(--color-secondary) !important;
+          background-color: rgba(68, 75, 140, 0.08) !important;
         }
       `}</style>
     </div>

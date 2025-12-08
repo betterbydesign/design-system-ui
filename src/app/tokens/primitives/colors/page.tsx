@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { ChevronRight, Check, Filter, Grid, List, Download, Search } from 'lucide-react';
+import { ChevronRight, Check, Filter, Grid, List, Download, Search, Palette } from 'lucide-react';
 import { ColorPaletteGrid, ColorPaletteData } from '@/components/tokens/ColorPaletteGrid';
 import { TokenLayer } from '@/lib/types';
 import { TokenCopyButton } from '@/components/TokenCopyButton';
@@ -496,28 +496,48 @@ export default function PrimitiveColorsPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--spacing-4)' }}>
-          <div>
-            <h1
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
+            {/* H1 Page Icon Box - white bg, light thin border */}
+            <div
               style={{
-                fontSize: 'var(--font-size-h3)',
-                fontWeight: 700,
-                color: 'var(--color-foreground)',
-                marginBottom: 'var(--spacing-2)',
+                width: 56,
+                height: 56,
+                borderRadius: 'var(--radius-xl)',
+                backgroundColor: 'var(--color-card)',
+                border: '1px solid rgba(68, 75, 140, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                color: 'var(--color-secondary)',
               }}
             >
-              Color Palettes
-            </h1>
-            <p
-              style={{
-                fontSize: 'var(--font-size-body)',
-                color: 'var(--color-muted)',
-                lineHeight: 'var(--line-height-relaxed)',
-                maxWidth: '65ch',
-              }}
-            >
-              22 color families with 11 shades each (50-950), plus base colors. These are the raw
-              color values used by semantic tokens throughout the design system.
-            </p>
+              <Palette size={28} />
+            </div>
+            <div>
+              <h1
+                style={{
+                  fontSize: 'var(--font-size-h2)',
+                  fontWeight: 700,
+                  color: 'var(--color-foreground)',
+                  marginBottom: 'var(--spacing-2)',
+                  lineHeight: 'var(--line-height-tight)',
+                }}
+              >
+                Color Palettes
+              </h1>
+              <p
+                style={{
+                  fontSize: 'var(--font-size-body)',
+                  color: 'var(--color-muted)',
+                  lineHeight: 'var(--line-height-relaxed)',
+                  maxWidth: '65ch',
+                }}
+              >
+                22 color families with 11 shades each (50-950), plus base colors. These are the raw
+                color values used by semantic tokens throughout the design system.
+              </p>
+            </div>
           </div>
 
           {/* Export Button */}
@@ -554,13 +574,13 @@ export default function PrimitiveColorsPage() {
         }}
       >
         {[
-          { label: 'Color Families', value: '22', color: 'var(--color-brand)' },
-          { label: 'Shades per Family', value: '11', color: 'var(--color-secondary)' },
-          { label: 'Total Colors', value: '245', color: 'var(--color-brand)' },
-          { label: 'Base Colors', value: '3', color: 'var(--color-secondary)' },
+          { label: 'Color Families', value: '22' },
+          { label: 'Shades per Family', value: '11' },
+          { label: 'Total Colors', value: '245' },
+          { label: 'Base Colors', value: '3' },
         ].map((stat) => (
           <div key={stat.label} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--spacing-2)' }}>
-            <span style={{ fontSize: 'var(--font-size-h5)', fontWeight: 700, color: stat.color }}>
+            <span style={{ fontSize: 'var(--font-size-h5)', fontWeight: 700, color: 'var(--color-brand)' }}>
               {stat.value}
             </span>
             <span style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-muted)' }}>

@@ -1,7 +1,8 @@
 'use client';
 
-import { Search, Mail, Lock, Eye, EyeOff, Copy, Check } from 'lucide-react';
+import { Search, Mail, Lock, Eye, EyeOff, Copy, Check, ChevronRight, TextCursor, Layers, FormInput, MessageSquare, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 // Reusable copy field component
 function CopyField({ 
@@ -81,40 +82,92 @@ export default function InputsPage() {
     <div style={{ maxWidth: 'var(--layout-6xl)' }}>
       {/* Header */}
       <div style={{ marginBottom: 'var(--spacing-8)' }}>
-        <h1 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h3)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-1)',
-          }}
-        >
-          Inputs
-        </h1>
-        <p 
-          style={{ 
-            fontSize: 'var(--font-size-body)',
-            color: 'var(--color-muted)',
-            lineHeight: 'var(--line-height-snug)',
-            maxWidth: '60ch',
-          }}
-        >
-          Form input components with consistent styling using semantic design tokens.
-        </p>
+        {/* Breadcrumb */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-4)' }}>
+          <Link href="/" style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-muted)', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <ChevronRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <Link href="/components" style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-muted)', textDecoration: 'none' }}>
+            Components
+          </Link>
+          <ChevronRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <span style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-foreground)', fontWeight: 500 }}>
+            Inputs
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
+          {/* H1 Page Icon Box - white bg, light thin border */}
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 'var(--radius-xl)',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: 'var(--color-secondary)',
+            }}
+          >
+            <TextCursor size={28} />
+          </div>
+
+          <div>
+            <h1 
+              style={{ 
+                fontSize: 'var(--font-size-h2)',
+                fontWeight: 700,
+                color: 'var(--color-foreground)',
+                marginBottom: 'var(--spacing-2)',
+                lineHeight: 'var(--line-height-tight)',
+              }}
+            >
+              Inputs
+            </h1>
+            <p 
+              style={{ 
+                fontSize: 'var(--font-size-body)',
+                color: 'var(--color-muted)',
+                lineHeight: 'var(--line-height-relaxed)',
+                maxWidth: '65ch',
+              }}
+            >
+              Form input components with consistent styling using semantic design tokens.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Text Inputs */}
       <div style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h5)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-3)',
-          }}
-        >
-          Text Inputs
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <FormInput size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Text Inputs
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Standard text input fields
+            </p>
+          </div>
+        </div>
         <div 
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           style={{
@@ -265,16 +318,30 @@ export default function InputsPage() {
 
       {/* Textarea */}
       <div style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h5)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-4)',
-          }}
-        >
-          Textarea
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <MessageSquare size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Textarea
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Multi-line text input
+            </p>
+          </div>
+        </div>
         <div 
           style={{
             backgroundColor: 'var(--card-bg)',
@@ -313,16 +380,30 @@ export default function InputsPage() {
 
       {/* Select */}
       <div style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h5)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-4)',
-          }}
-        >
-          Select
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <ChevronDown size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Select
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Dropdown selection input
+            </p>
+          </div>
+        </div>
         <div 
           style={{
             backgroundColor: 'var(--card-bg)',
@@ -364,31 +445,24 @@ export default function InputsPage() {
       {/* Token Reference */}
       <div 
         style={{
-          backgroundColor: 'var(--card-bg)',
+          backgroundColor: 'var(--color-card)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-6)',
-          border: '1px solid var(--card-border)',
+          border: '1px solid var(--color-card-border)',
         }}
       >
-        <h3 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h6)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-1)',
-          }}
-        >
-          Input Tokens
-        </h3>
-        <p 
-          style={{ 
-            fontSize: 'var(--font-size-body-small)',
-            color: 'var(--color-muted)',
-            marginBottom: 'var(--spacing-3)',
-          }}
-        >
-          Click to copy the CSS variable or resolved value
-        </p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-4)' }}>
+          {/* Callout icon - just icon, no background */}
+          <Layers size={20} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: 2 }} />
+          <div>
+            <h3 style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+              Input Tokens
+            </h3>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Click to copy the CSS variable or resolved value
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {[
             { name: '--input-bg', value: 'var(--color-background)' },

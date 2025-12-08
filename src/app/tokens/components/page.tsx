@@ -14,6 +14,7 @@ import {
   ChevronDown,
   Hash,
   Sparkles,
+  Component,
 } from 'lucide-react';
 import { TokenLayer, TOKEN_LAYER_INFO } from '@/lib/types';
 import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
@@ -505,13 +506,13 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
           alignItems: 'center',
           gap: 'var(--spacing-1)',
           padding: '2px 6px',
-          backgroundColor: 'rgba(245, 158, 11, 0.08)',
-          border: '1px solid rgba(245, 158, 11, 0.2)',
+          backgroundColor: 'rgba(42, 175, 184, 0.08)',
+          border: '1px solid rgba(42, 175, 184, 0.2)',
           borderRadius: 'var(--radius-md)',
         }}
       >
-        <Box size={10} style={{ color: '#f59e0b' }} />
-        <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: '#f59e0b' }}>
+        <Box size={10} style={{ color: 'var(--color-brand)' }} />
+        <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: 'var(--color-brand)' }}>
           Component
         </span>
       </div>
@@ -580,8 +581,8 @@ function TokenRow({ token }: { token: ComponentToken }) {
             style={{
               fontSize: 'var(--font-size-caption)',
               fontFamily: 'ui-monospace, monospace',
-              color: token.type === 'color' ? '#f59e0b' : '#3b82f6',
-              backgroundColor: token.type === 'color' ? '#f59e0b15' : '#3b82f615',
+              color: token.type === 'color' ? 'var(--color-brand)' : 'var(--color-secondary)',
+              backgroundColor: token.type === 'color' ? 'rgba(42, 175, 184, 0.1)' : 'rgba(68, 75, 140, 0.1)',
               padding: '1px 4px',
               borderRadius: 'var(--radius-sm)',
             }}
@@ -820,22 +821,22 @@ export default function ComponentTokensPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
-          {/* Layer badge */}
+          {/* Page icon box - neutral bg, colored border */}
           <div
             style={{
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: 'rgba(var(--color-brand-rgb), 0.1)',
-              border: '1px solid rgba(var(--color-brand-rgb), 0.2)',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
-              color: 'var(--color-brand)',
+              color: 'var(--color-secondary)',
             }}
           >
-            <Box size={28} />
+            <Component size={28} />
           </div>
 
           <div>
@@ -877,7 +878,7 @@ export default function ComponentTokensPage() {
           { label: 'Components', value: ALL_COMPONENTS.length.toString() },
           { label: 'Variants', value: totalVariants.toString() },
           { label: 'Total Tokens', value: totalTokens.toString() },
-          { label: 'Layer', value: '4 of 5' },
+          { label: 'Layer', value: '4' },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -909,8 +910,8 @@ export default function ComponentTokensPage() {
       {/* Reference Chain Example */}
       <div
         style={{
-          backgroundColor: 'rgba(245, 158, 11, 0.05)',
-          border: '1px solid rgba(245, 158, 11, 0.15)',
+          backgroundColor: 'rgba(68, 75, 140, 0.05)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
           marginBottom: 'var(--spacing-8)',
@@ -920,7 +921,7 @@ export default function ComponentTokensPage() {
           style={{
             fontSize: 'var(--font-size-body)',
             fontWeight: 600,
-            color: '#f59e0b',
+            color: 'var(--color-secondary)',
             marginBottom: 'var(--spacing-2)',
           }}
         >
@@ -950,9 +951,9 @@ export default function ComponentTokensPage() {
           </div>
           <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
           {/* Component */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 'var(--radius-md)' }}>
-            <Box size={12} style={{ color: '#f59e0b' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#f59e0b', fontWeight: 500 }}>Button.Background</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(42, 175, 184, 0.08)', border: '1px solid rgba(42, 175, 184, 0.2)', borderRadius: 'var(--radius-md)' }}>
+            <Box size={12} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', fontWeight: 500 }}>Button.Background</span>
           </div>
         </div>
       </div>
@@ -961,22 +962,9 @@ export default function ComponentTokensPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-10)' }}>
         {ALL_COMPONENTS.map((component) => (
           <section key={component.id}>
-            {/* Component Header */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 'var(--radius-lg)',
-                  backgroundColor: 'var(--color-background)',
-                  border: '1px solid var(--color-border)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: component.iconColor,
-                  flexShrink: 0,
-                }}
-              >
+            {/* Component Header - section icon only, no box */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-6)' }}>
+              <div style={{ color: 'var(--color-brand)', marginTop: 4 }}>
                 {component.icon}
               </div>
               <div style={{ flex: 1 }}>
@@ -1030,8 +1018,8 @@ export default function ComponentTokensPage() {
       {/* Architecture Note */}
       <div
         style={{
-          backgroundColor: 'rgba(245, 158, 11, 0.05)',
-          border: '1px solid rgba(245, 158, 11, 0.15)',
+          backgroundColor: 'rgba(68, 75, 140, 0.05)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
           marginTop: 'var(--spacing-10)',
@@ -1041,7 +1029,7 @@ export default function ComponentTokensPage() {
           style={{
             fontSize: 'var(--font-size-body)',
             fontWeight: 600,
-            color: '#f59e0b',
+            color: 'var(--color-secondary)',
             marginBottom: 'var(--spacing-2)',
           }}
         >

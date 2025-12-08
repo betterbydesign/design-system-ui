@@ -1,46 +1,99 @@
 'use client';
 
-import { ArrowRight, Star, User, Calendar } from 'lucide-react';
+import { ArrowRight, Star, User, Calendar, ChevronRight, Box, Layers, LayoutList, RectangleHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
 export default function CardsPage() {
   return (
     <div style={{ maxWidth: 'var(--layout-6xl)' }}>
       {/* Header */}
       <div style={{ marginBottom: 'var(--spacing-8)' }}>
-        <h1 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h3)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-1)',
-          }}
-        >
-          Cards
-        </h1>
-        <p 
-          style={{ 
-            fontSize: 'var(--font-size-body)',
-            color: 'var(--color-muted)',
-            lineHeight: 'var(--line-height-snug)',
-            maxWidth: '60ch',
-          }}
-        >
-          Card components for content organization, featuring various layouts and interactive states.
-        </p>
+        {/* Breadcrumb */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-4)' }}>
+          <Link href="/" style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-muted)', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <ChevronRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <Link href="/components" style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-muted)', textDecoration: 'none' }}>
+            Components
+          </Link>
+          <ChevronRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <span style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-foreground)', fontWeight: 500 }}>
+            Cards
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
+          {/* H1 Page Icon Box - white bg, light thin border */}
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 'var(--radius-xl)',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: 'var(--color-secondary)',
+            }}
+          >
+            <Box size={28} />
+          </div>
+
+          <div>
+            <h1 
+              style={{ 
+                fontSize: 'var(--font-size-h2)',
+                fontWeight: 700,
+                color: 'var(--color-foreground)',
+                marginBottom: 'var(--spacing-2)',
+                lineHeight: 'var(--line-height-tight)',
+              }}
+            >
+              Cards
+            </h1>
+            <p 
+              style={{ 
+                fontSize: 'var(--font-size-body)',
+                color: 'var(--color-muted)',
+                lineHeight: 'var(--line-height-relaxed)',
+                maxWidth: '65ch',
+              }}
+            >
+              Card components for content organization, featuring various layouts and interactive states.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Basic Cards */}
       <div style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h5)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-3)',
-          }}
-        >
-          Basic Cards
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <LayoutList size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Basic Cards
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Simple content containers
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
             <div
@@ -81,16 +134,30 @@ export default function CardsPage() {
 
       {/* Feature Cards */}
       <div style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h5)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-4)',
-          }}
-        >
-          Feature Cards
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Star size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Feature Cards
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Cards with icon headers and hover states
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { icon: Star, color: 'var(--color-brand)' },
@@ -155,16 +222,30 @@ export default function CardsPage() {
 
       {/* Horizontal Card */}
       <div style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 
-          className="font-bold"
-          style={{ 
-            fontSize: 'var(--font-size-h5)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-4)',
-          }}
-        >
-          Horizontal Card
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <RectangleHorizontal size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Horizontal Card
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Side-by-side layout for list views
+            </p>
+          </div>
+        </div>
         <div
           className="flex flex-col md:flex-row gap-6"
           style={{
@@ -220,23 +301,24 @@ export default function CardsPage() {
       {/* Token Reference */}
       <div 
         style={{
-          backgroundColor: 'var(--card-bg)',
+          backgroundColor: 'var(--color-card)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-6)',
-          border: '1px solid var(--card-border)',
+          border: '1px solid var(--color-card-border)',
         }}
       >
-        <h3 
-          className="font-semibold"
-          style={{ 
-            fontSize: 'var(--card-title-lg-font-size)',
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-4)',
-            lineHeight: 'var(--line-height-snug)',
-          }}
-        >
-          Card Tokens
-        </h3>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-4)' }}>
+          {/* Callout icon - just icon, no background */}
+          <Layers size={20} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: 2 }} />
+          <div>
+            <h3 style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+              Card Tokens
+            </h3>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Design token reference for card components
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
             { name: '--card-bg', value: 'var(--color-card)' },

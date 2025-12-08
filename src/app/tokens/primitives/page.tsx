@@ -267,19 +267,19 @@ export default function PrimitivesPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
-          {/* Layer badge */}
+          {/* H1 Page Icon Box - white bg, light thin border */}
           <div
             style={{
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: 'rgba(var(--color-brand-rgb), 0.1)',
-              border: '1px solid rgba(var(--color-brand-rgb), 0.2)',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
-              color: 'var(--color-brand)',
+              color: 'var(--color-secondary)',
             }}
           >
             <Hash size={28} />
@@ -292,6 +292,7 @@ export default function PrimitivesPage() {
                 fontWeight: 700,
                 color: 'var(--color-foreground)',
                 marginBottom: 'var(--spacing-2)',
+                lineHeight: 'var(--line-height-tight)',
               }}
             >
               Primitives
@@ -356,16 +357,37 @@ export default function PrimitivesPage() {
 
       {/* Category Cards */}
       <div style={{ marginBottom: 'var(--spacing-8)' }}>
-        <h2
-          style={{
-            fontSize: 'var(--font-size-h5)',
-            fontWeight: 600,
-            color: 'var(--color-foreground)',
-            marginBottom: 'var(--spacing-4)',
-          }}
-        >
-          Token Categories
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Layers size={20} />
+          </div>
+          <div>
+            <h2
+              style={{
+                fontSize: 'var(--font-size-h4)',
+                fontWeight: 600,
+                color: 'var(--color-foreground)',
+                lineHeight: 'var(--line-height-tight)',
+              }}
+            >
+              Token Categories
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Explore the fundamental building blocks
+            </p>
+          </div>
+        </div>
         <div
           style={{
             display: 'grid',
@@ -398,18 +420,7 @@ export default function PrimitivesPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 'var(--radius-lg)',
-                      backgroundColor: 'var(--color-background)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'var(--color-brand)',
-                    }}
-                  >
+                  <div style={{ color: 'var(--color-brand)' }}>
                     {category.icon}
                   </div>
                   <span

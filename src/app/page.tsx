@@ -284,7 +284,7 @@ export default function Home() {
           description="Two fluid type scales - Major Second (1.125) and Major Third (1.25)."
           icon={Type}
           href="/tokens/typography"
-          color="#444B8C"
+          color="var(--color-secondary)"
           bgColor="rgba(68, 75, 140, 0.1)"
         />
       </div>

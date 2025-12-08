@@ -59,6 +59,14 @@ Located in `/tokens/`:
 | Token Explorer | Full playground with live updates | Most value for users |
 | Data Strategy | API endpoints | Future-proof for CMS integration |
 
+### UI Styleguide Reference
+**See `styleguide.md`** for detailed visual guidelines covering:
+- Color system & theming (Brand vs Secondary)
+- Typography scale (Major Second for documentation)
+- Component patterns (Page header, Stats cards, Info boxes)
+- Layout grid (4px/8px system)
+- TokenCopyButton usage
+
 ---
 
 ## 📁 Target File Structure
@@ -422,6 +430,25 @@ interface Token {
     - Consistent iconography
 - **Phase 1 Complete!** Ready to start Phase 2: Node Relationship Viewer
 
+### Session 8 - December 8, 2025
+- **Modernization 2.0 - UI Consistency Update:**
+  - Created `styleguide.md` documenting all visual guidelines
+  - Updated all pages to follow consistent color theming:
+    - **Brand color** (`var(--color-brand)`) for interactive elements, key data values
+    - **Secondary color** (`var(--color-secondary)`) for structural elements, page icons
+    - Eliminated random decorative colors (#8b5cf6, #f59e0b, etc.)
+  - Updated pages with new styles:
+    - `/tokens/spacing/page.tsx`
+    - `/tokens/semantic/page.tsx`
+    - `/tokens/colors/page.tsx`
+    - `/tokens/components/page.tsx`
+    - `/frameworks/greenshift/page.tsx`
+    - `/page.tsx` (home)
+  - Replaced inline CopyButton components with TokenCopyButton
+  - Standardized stats cards to use brand color for values
+  - Unified architecture/info boxes to use secondary theme
+  - Added uppercase + letter-spacing to stats labels
+
 ---
 
 ## 🚀 Getting Started (Next Session)
@@ -438,11 +465,11 @@ interface Token {
 
 | Phase | Status | Progress |
 |-------|--------|----------|
-| Phase 1: Documentation | ✅ Complete | 28/28 tasks |
-| Phase 2: Relationships | ⚪ Pending | 0/9 tasks |
-| Phase 3: Export/Import | ⚪ Pending | 0/12 tasks |
+| Phase 1: Documentation | ✅ Complete | 31/31 tasks |
+| Phase 2: Relationships | ⚪ Pending | 0/14 tasks |
+| Phase 3: Export/Import | ⚪ Pending | 0/21 tasks |
 
-**Total Progress:** 28/49 tasks (57%)
+**Total Progress:** 31/66 tasks (47%)
 
 ---
 
@@ -450,5 +477,6 @@ interface Token {
 
 - Token Files: `/tokens/`
 - Current App: `http://localhost:3000`
+- **UI Styleguide: `styleguide.md`**
 - Figma Import Guide: `/tokens/IMPORT-GUIDE.md`
 - CSS Reference: `/tokens/css-variables-reference.md`

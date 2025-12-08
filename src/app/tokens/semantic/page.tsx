@@ -15,8 +15,10 @@ import {
   CheckCircle,
   XCircle,
   Info,
+  Hash,
 } from 'lucide-react';
 import { TokenLayer, TOKEN_LAYER_INFO } from '@/lib/types';
+import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 // =============================================================================
 // TYPES
@@ -180,91 +182,6 @@ const SEMANTIC_LAYOUT: SemanticLayoutToken[] = [
 // HELPER COMPONENTS
 // =============================================================================
 
-function CopyButton({ value, size = 'md' }: { value: string; size?: 'sm' | 'md' }) {
-  const [copied, setCopied] = useState(false);
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top - 8 });
-      }
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setTooltipPos(null);
-      }, 1500);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const iconSize = size === 'sm' ? 12 : 14;
-  const buttonSize = size === 'sm' ? 24 : 28;
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        onClick={handleCopy}
-        title={copied ? undefined : `Copy ${value}`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: buttonSize,
-          height: buttonSize,
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--color-card-border)',
-          backgroundColor: 'var(--color-card)',
-          color: 'var(--color-muted)',
-          cursor: 'pointer',
-          transition: 'all var(--duration-100) var(--ease-out)',
-          flexShrink: 0,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-brand)';
-          e.currentTarget.style.color = 'var(--color-brand)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-card-border)';
-          e.currentTarget.style.color = 'var(--color-muted)';
-        }}
-      >
-        <Copy size={iconSize} />
-      </button>
-      {/* Tooltip rendered at body level via portal */}
-      {copied && tooltipPos && typeof document !== 'undefined' && ReactDOM.createPortal(
-        <div
-          style={{
-            position: 'fixed',
-            left: tooltipPos.x,
-            top: tooltipPos.y,
-            transform: 'translate(-50%, -100%)',
-            padding: '6px 10px',
-            backgroundColor: '#1e293b',
-            color: '#ffffff',
-            fontSize: '12px',
-            fontWeight: 500,
-            borderRadius: '6px',
-            whiteSpace: 'nowrap',
-            zIndex: 9999,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            pointerEvents: 'none',
-            animation: 'tooltipFadeIn 0.15s ease-out',
-          }}
-        >
-          Copied!
-        </div>,
-        document.body
-      )}
-    </>
-  );
-}
-
 function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
   // Determine if color is light for text contrast
   const isLightColor = (hex: string): boolean => {
@@ -314,20 +231,11 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
           <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 600, color: 'var(--color-foreground)' }}>
             {token.name}
           </span>
-          <CopyButton value={`var(${token.cssVariable})`} size="sm" />
         </div>
 
         {/* CSS Variable */}
-        <div
-          style={{
-            fontSize: 'var(--font-size-caption)',
-            fontFamily: 'ui-monospace, monospace',
-            color: 'var(--color-muted)',
-            marginBottom: 'var(--spacing-3)',
-            wordBreak: 'break-all',
-          }}
-        >
-          {token.cssVariable}
+        <div style={{ marginBottom: 'var(--spacing-3)' }}>
+          <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
         </div>
 
         {/* Reference Chain: Value → Primitive → Semantic */}
@@ -356,12 +264,13 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
               alignItems: 'center',
               gap: 'var(--spacing-1)',
               padding: '2px 6px',
-              backgroundColor: '#3b82f610',
-              border: '1px solid #3b82f630',
+              backgroundColor: 'rgba(68, 75, 140, 0.08)',
+              border: '1px solid rgba(68, 75, 140, 0.15)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: '#3b82f6', fontWeight: 500 }}>
+            <Hash size={10} style={{ color: 'var(--color-secondary)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>
               {token.reference}
             </span>
           </div>
@@ -373,13 +282,13 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
               alignItems: 'center',
               gap: 'var(--spacing-1)',
               padding: '2px 6px',
-              backgroundColor: '#10b98110',
-              border: '1px solid #10b98130',
+              backgroundColor: 'rgba(42, 175, 184, 0.08)',
+              border: '1px solid rgba(42, 175, 184, 0.2)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Sparkles size={10} style={{ color: '#10b981' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: '#10b981' }}>
+            <Sparkles size={10} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: 'var(--color-brand)' }}>
               Semantic
             </span>
           </div>
@@ -453,20 +362,22 @@ export default function SemanticTokensPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
-          {/* Layer badge */}
+          {/* H1 Page Icon Box - white bg, light thin border */}
           <div
             style={{
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: '#10b98120',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              color: 'var(--color-secondary)',
             }}
           >
-            <Sparkles size={28} style={{ color: '#10b981' }} />
+            <Sparkles size={28} />
           </div>
 
           <div>
@@ -476,6 +387,7 @@ export default function SemanticTokensPage() {
                 fontWeight: 700,
                 color: 'var(--color-foreground)',
                 marginBottom: 'var(--spacing-2)',
+                lineHeight: 'var(--line-height-tight)',
               }}
             >
               Semantic Tokens
@@ -506,10 +418,10 @@ export default function SemanticTokensPage() {
         }}
       >
         {[
-          { label: 'Color Tokens', value: totalColorTokens.toString(), color: '#10b981' },
-          { label: 'Color Roles', value: SEMANTIC_COLORS.length.toString(), color: '#8b5cf6' },
-          { label: 'Radius Tokens', value: totalRadiusTokens.toString(), color: '#f59e0b' },
-          { label: 'Layout Tokens', value: totalLayoutTokens.toString(), color: '#3b82f6' },
+          { label: 'Color Tokens', value: totalColorTokens.toString() },
+          { label: 'Color Roles', value: SEMANTIC_COLORS.length.toString() },
+          { label: 'Radius Tokens', value: totalRadiusTokens.toString() },
+          { label: 'Layout Tokens', value: totalLayoutTokens.toString() },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -525,13 +437,13 @@ export default function SemanticTokensPage() {
               style={{
                 fontSize: 'var(--font-size-h4)',
                 fontWeight: 700,
-                color: stat.color,
+                color: 'var(--color-brand)',
                 marginBottom: 'var(--spacing-1)',
               }}
             >
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -540,23 +452,23 @@ export default function SemanticTokensPage() {
 
       {/* Color Tokens Section */}
       <section style={{ marginBottom: 'var(--spacing-10)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-6)' }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: 'var(--color-background)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-brand)',
-            }}
-          >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
             <Palette size={20} />
           </div>
           <div>
-            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
               Color Roles
             </h2>
             <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
@@ -658,23 +570,23 @@ export default function SemanticTokensPage() {
 
       {/* Radius Tokens Section */}
       <section style={{ marginBottom: 'var(--spacing-10)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-6)' }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: 'var(--color-background)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#f59e0b',
-            }}
-          >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
             <Square size={20} />
           </div>
           <div>
-            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
               Radius Roles
             </h2>
             <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
@@ -745,8 +657,8 @@ export default function SemanticTokensPage() {
                         style={{
                           padding: '2px 8px',
                           borderRadius: 'var(--radius-sm)',
-                          backgroundColor: '#3b82f615',
-                          color: '#3b82f6',
+                          backgroundColor: 'rgba(68, 75, 140, 0.08)',
+                          color: 'var(--color-secondary)',
                           fontSize: 'var(--font-size-caption)',
                           fontFamily: 'ui-monospace, monospace',
                         }}
@@ -758,7 +670,7 @@ export default function SemanticTokensPage() {
                       {token.resolvedValue}
                     </td>
                     <td style={{ padding: 'var(--spacing-3) var(--spacing-4)', textAlign: 'center' }}>
-                      <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+                      <TokenCopyButton value={`var(${token.cssVariable})`} variant="primary" />
                     </td>
                   </tr>
                 ))}
@@ -770,23 +682,23 @@ export default function SemanticTokensPage() {
 
       {/* Layout Tokens Section */}
       <section style={{ marginBottom: 'var(--spacing-10)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-6)' }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: 'var(--color-background)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#3b82f6',
-            }}
-          >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
             <Layout size={20} />
           </div>
           <div>
-            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
               Layout Widths
             </h2>
             <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
@@ -826,7 +738,7 @@ export default function SemanticTokensPage() {
                   style={{
                     height: '100%',
                     width: `${Math.min((token.pixels / 1440) * 100, 100)}%`,
-                    backgroundColor: '#3b82f6',
+                    backgroundColor: 'var(--color-brand)',
                     borderRadius: 'var(--radius-full)',
                   }}
                 />
@@ -836,61 +748,58 @@ export default function SemanticTokensPage() {
                 <span style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)' }}>
                   {token.name}
                 </span>
-                <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+                <span style={{ fontSize: 'var(--font-size-body-small)', fontWeight: 500, color: 'var(--color-brand)' }}>
+                  {token.pixels}px
+                </span>
               </div>
 
-              <div style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-muted)', marginBottom: 'var(--spacing-2)' }}>
-                {token.cssVariable}
+              <div style={{ marginBottom: 'var(--spacing-2)' }}>
+                <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
-                  {token.reference ? (
-                    <>
-                      <span
-                        style={{
-                          padding: '2px 6px',
-                          borderRadius: 'var(--radius-sm)',
-                          backgroundColor: '#10b98115',
-                          color: '#10b981',
-                          fontSize: 'var(--font-size-caption)',
-                          fontWeight: 500,
-                        }}
-                      >
-                        SEM
-                      </span>
-                      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
-                      <span
-                        style={{
-                          padding: '2px 6px',
-                          borderRadius: 'var(--radius-sm)',
-                          backgroundColor: '#3b82f615',
-                          color: '#3b82f6',
-                          fontSize: 'var(--font-size-caption)',
-                          fontWeight: 500,
-                        }}
-                      >
-                        layout.{token.reference}
-                      </span>
-                    </>
-                  ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
+                {token.reference ? (
+                  <>
                     <span
                       style={{
                         padding: '2px 6px',
                         borderRadius: 'var(--radius-sm)',
-                        backgroundColor: '#10b98115',
-                        color: '#10b981',
+                        backgroundColor: 'rgba(42, 175, 184, 0.08)',
+                        color: 'var(--color-brand)',
                         fontSize: 'var(--font-size-caption)',
                         fontWeight: 500,
                       }}
                     >
-                      Direct Value
+                      SEM
                     </span>
-                  )}
-                </div>
-                <span style={{ fontSize: 'var(--font-size-body-small)', fontWeight: 500, color: 'var(--color-foreground)' }}>
-                  {token.pixels}px
-                </span>
+                    <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+                    <span
+                      style={{
+                        padding: '2px 6px',
+                        borderRadius: 'var(--radius-sm)',
+                        backgroundColor: 'rgba(68, 75, 140, 0.08)',
+                        color: 'var(--color-secondary)',
+                        fontSize: 'var(--font-size-caption)',
+                        fontWeight: 500,
+                      }}
+                    >
+                      layout.{token.reference}
+                    </span>
+                  </>
+                ) : (
+                  <span
+                    style={{
+                      padding: '2px 6px',
+                      borderRadius: 'var(--radius-sm)',
+                      backgroundColor: 'rgba(42, 175, 184, 0.08)',
+                      color: 'var(--color-brand)',
+                      fontSize: 'var(--font-size-caption)',
+                      fontWeight: 500,
+                    }}
+                  >
+                    Direct Value
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -900,8 +809,8 @@ export default function SemanticTokensPage() {
       {/* Architecture Note */}
       <div
         style={{
-          backgroundColor: '#10b98110',
-          border: '1px solid #10b98130',
+          backgroundColor: 'rgba(68, 75, 140, 0.05)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
         }}
@@ -910,7 +819,7 @@ export default function SemanticTokensPage() {
           style={{
             fontSize: 'var(--font-size-body)',
             fontWeight: 600,
-            color: '#10b981',
+            color: 'var(--color-secondary)',
             marginBottom: 'var(--spacing-2)',
           }}
         >
@@ -918,9 +827,9 @@ export default function SemanticTokensPage() {
         </h3>
         <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-foreground)', lineHeight: 'var(--line-height-relaxed)', marginBottom: 'var(--spacing-3)' }}>
           Semantic tokens provide meaning to design decisions. Instead of using raw colors like 
-          <code style={{ backgroundColor: 'var(--color-background)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'ui-monospace, monospace', fontSize: '0.9em', margin: '0 4px' }}>--primitives-color-emerald-400</code>, 
+          <TokenCopyButton value="--primitives-color-emerald-400" variant="muted" />, 
           use semantic tokens like 
-          <code style={{ backgroundColor: 'var(--color-background)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'ui-monospace, monospace', fontSize: '0.9em', margin: '0 4px' }}>--color-brand</code> 
+          <TokenCopyButton value="--color-brand" variant="muted" /> 
           to express intent and enable easy theme switching.
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>

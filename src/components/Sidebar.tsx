@@ -12,7 +12,7 @@ import {
   ChevronRight,
   Layers,
   Box,
-  ToggleLeft,
+  TextCursor,
   Square,
   Hash,
   Ruler,
@@ -73,7 +73,7 @@ const navSections: NavSection[] = [
     items: [
       { name: 'Buttons', href: '/components/buttons', icon: Square, description: 'Button variants' },
       { name: 'Cards', href: '/components/cards', icon: Box, description: 'Card layouts' },
-      { name: 'Inputs', href: '/components/inputs', icon: ToggleLeft, description: 'Form elements' },
+      { name: 'Inputs', href: '/components/inputs', icon: TextCursor, description: 'Form elements' },
     ]
   },
   {

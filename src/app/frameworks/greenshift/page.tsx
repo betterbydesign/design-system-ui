@@ -437,7 +437,7 @@ function TokenRow({ token }: { token: GreenshiftToken }) {
           style={{
             fontSize: 'var(--font-size-caption)',
             fontFamily: 'ui-monospace, monospace',
-            color: '#6366f1',
+            color: 'var(--color-brand)',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -743,20 +743,22 @@ export default function GreenshiftPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
-          {/* Layer badge */}
+          {/* H1 Page Icon Box - white bg, light thin border */}
           <div
             style={{
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: '#6366f120',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              color: 'var(--color-secondary)',
             }}
           >
-            <Globe size={28} style={{ color: '#6366f1' }} />
+            <Globe size={28} />
           </div>
 
           <div>
@@ -766,6 +768,7 @@ export default function GreenshiftPage() {
                 fontWeight: 700,
                 color: 'var(--color-foreground)',
                 marginBottom: 'var(--spacing-2)',
+                lineHeight: 'var(--line-height-tight)',
               }}
             >
               Greenshift / WordPress
@@ -796,10 +799,10 @@ export default function GreenshiftPage() {
         }}
       >
         {[
-          { label: 'Preset Colors', value: totalPresetColors.toString(), color: '#6366f1' },
-          { label: 'Custom Props', value: totalCustomProps.toString(), color: '#f59e0b' },
-          { label: 'Style Globals', value: totalStyleGlobals.toString(), color: '#10b981' },
-          { label: 'Total Variables', value: totalVariables.toString(), color: '#8b5cf6' },
+          { label: 'Preset Colors', value: totalPresetColors.toString() },
+          { label: 'Custom Props', value: totalCustomProps.toString() },
+          { label: 'Style Globals', value: totalStyleGlobals.toString() },
+          { label: 'Total Variables', value: totalVariables.toString() },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -815,13 +818,13 @@ export default function GreenshiftPage() {
               style={{
                 fontSize: 'var(--font-size-h4)',
                 fontWeight: 700,
-                color: stat.color,
+                color: 'var(--color-brand)',
                 marginBottom: 'var(--spacing-1)',
               }}
             >
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -831,21 +834,21 @@ export default function GreenshiftPage() {
       {/* Integration Info */}
       <div
         style={{
-          backgroundColor: '#6366f110',
-          border: '1px solid #6366f130',
+          backgroundColor: 'rgba(68, 75, 140, 0.05)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
           marginBottom: 'var(--spacing-8)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-3)' }}>
-          <Zap size={20} style={{ color: '#6366f1', flexShrink: 0, marginTop: 2 }} />
+          <Zap size={20} style={{ color: 'var(--color-secondary)', flexShrink: 0, marginTop: 2 }} />
           <div>
             <h3
               style={{
                 fontSize: 'var(--font-size-body)',
                 fontWeight: 600,
-                color: '#6366f1',
+                color: 'var(--color-secondary)',
                 marginBottom: 'var(--spacing-2)',
               }}
             >
@@ -865,25 +868,25 @@ export default function GreenshiftPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-10)' }}>
         {ALL_SECTIONS.map((section) => (
           <section key={section.id}>
-            {/* Section Header */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+            {/* Section Header - H2 Icon Box */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
               <div
                 style={{
                   width: 48,
                   height: 48,
                   borderRadius: 'var(--radius-lg)',
-                  backgroundColor: `${section.iconColor}15`,
+                  backgroundColor: 'rgba(68, 75, 140, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: section.iconColor,
+                  color: 'var(--color-secondary)',
                   flexShrink: 0,
                 }}
               >
                 {section.icon}
               </div>
               <div style={{ flex: 1 }}>
-                <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
+                <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)', lineHeight: 'var(--line-height-tight)' }}>
                   {section.name}
                 </h2>
                 <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', margin: 0 }}>
@@ -908,24 +911,23 @@ export default function GreenshiftPage() {
 
       {/* CSS Code Blocks */}
       <section style={{ marginTop: 'var(--spacing-10)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)', marginBottom: 'var(--spacing-6)' }}>
-          <div
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 'var(--radius-lg)',
-              backgroundColor: '#8b5cf615',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#8b5cf6',
-              flexShrink: 0,
-            }}
-          >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
             <Code size={20} />
           </div>
           <div>
-            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)', lineHeight: 'var(--line-height-tight)' }}>
               Copy-Ready CSS
             </h2>
             <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', margin: 0 }}>
@@ -944,8 +946,8 @@ export default function GreenshiftPage() {
       {/* Usage Note */}
       <div
         style={{
-          backgroundColor: '#6366f110',
-          border: '1px solid #6366f130',
+          backgroundColor: 'rgba(68, 75, 140, 0.05)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-xl)',
           padding: 'var(--spacing-5)',
           marginTop: 'var(--spacing-10)',
@@ -955,7 +957,7 @@ export default function GreenshiftPage() {
           style={{
             fontSize: 'var(--font-size-body)',
             fontWeight: 600,
-            color: '#6366f1',
+            color: 'var(--color-secondary)',
             marginBottom: 'var(--spacing-2)',
           }}
         >
@@ -968,19 +970,19 @@ export default function GreenshiftPage() {
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', fontSize: 'var(--font-size-caption)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#6366f1' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: 'var(--color-brand)' }} />
             <span style={{ color: 'var(--color-muted)' }}>
               <strong style={{ color: 'var(--color-foreground)' }}>Preset colors</strong> appear in the block editor color picker
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', fontSize: 'var(--font-size-caption)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#f59e0b' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: 'var(--color-brand)' }} />
             <span style={{ color: 'var(--color-muted)' }}>
               <strong style={{ color: 'var(--color-foreground)' }}>Custom properties</strong> for component-specific styling
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', fontSize: 'var(--font-size-caption)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#10b981' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: 'var(--color-brand)' }} />
             <span style={{ color: 'var(--color-muted)' }}>
               <strong style={{ color: 'var(--color-foreground)' }}>Style globals</strong> control layout constraints
             </span>

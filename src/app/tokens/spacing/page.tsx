@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import Link from 'next/link';
-import { Copy, ChevronRight, Ruler, Hash, Sparkles } from 'lucide-react';
+import { ChevronRight, Ruler, Hash, Sparkles, Type, Square, Clock, Layers, LayoutGrid, MoveHorizontal, SeparatorHorizontal, Baseline } from 'lucide-react';
+import { TokenCopyButton } from '@/components/tokens/TokenCopyButton';
 
 // Complete spacing data from 01-Primitives.json
 interface SpacingValue {
@@ -120,90 +120,6 @@ const FONT_WEIGHT_TOKENS = [
   { key: 'black', cssVariable: '--font-weight-black', value: '900' },
 ];
 
-// Consistent copy button style
-function CopyButton({ value, size = 'sm' }: { value: string; size?: 'sm' | 'md' }) {
-  const [copied, setCopied] = useState(false);
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top - 8 });
-      }
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setTooltipPos(null);
-      }, 1500);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const iconSize = size === 'sm' ? 12 : 14;
-  const buttonSize = size === 'sm' ? 24 : 28;
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        onClick={handleCopy}
-        title={copied ? undefined : `Copy ${value}`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: buttonSize,
-          height: buttonSize,
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--color-card-border)',
-          backgroundColor: 'var(--color-card)',
-          color: 'var(--color-muted)',
-          cursor: 'pointer',
-          transition: 'all var(--duration-100) var(--ease-out)',
-          flexShrink: 0,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-brand)';
-          e.currentTarget.style.color = 'var(--color-brand)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--color-card-border)';
-          e.currentTarget.style.color = 'var(--color-muted)';
-        }}
-      >
-        <Copy size={iconSize} />
-      </button>
-      {copied && tooltipPos && typeof document !== 'undefined' && ReactDOM.createPortal(
-        <div
-          style={{
-            position: 'fixed',
-            left: tooltipPos.x,
-            top: tooltipPos.y,
-            transform: 'translate(-50%, -100%)',
-            padding: '6px 10px',
-            backgroundColor: '#1e293b',
-            color: '#ffffff',
-            fontSize: '12px',
-            fontWeight: 500,
-            borderRadius: '6px',
-            whiteSpace: 'nowrap',
-            zIndex: 9999,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            pointerEvents: 'none',
-            animation: 'tooltipFadeIn 0.15s ease-out',
-          }}
-        >
-          Copied!
-        </div>,
-        document.body
-      )}
-    </>
-  );
-}
 
 export default function SpacingPage() {
   return (
@@ -222,23 +138,26 @@ export default function SpacingPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-4)' }}>
+          {/* H1 Page Icon Box - white bg, light thin border */}
           <div
             style={{
               width: 56,
               height: 56,
               borderRadius: 'var(--radius-xl)',
-              backgroundColor: 'rgba(139, 92, 246, 0.15)',
+              backgroundColor: 'var(--color-card)',
+              border: '1px solid rgba(68, 75, 140, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              color: 'var(--color-secondary)',
             }}
           >
-            <Ruler size={28} style={{ color: '#8b5cf6' }} />
+            <Ruler size={28} />
           </div>
 
           <div>
-            <h1 style={{ fontSize: 'var(--font-size-h2)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-2)' }}>
+            <h1 style={{ fontSize: 'var(--font-size-h2)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-2)', lineHeight: 'var(--line-height-tight)' }}>
               Spacing & Layout
             </h1>
             <p style={{ fontSize: 'var(--font-size-body)', color: 'var(--color-muted)', lineHeight: 'var(--line-height-relaxed)', maxWidth: '65ch' }}>
@@ -259,10 +178,10 @@ export default function SpacingPage() {
         }}
       >
         {[
-          { label: 'Spacing Values', value: '31', color: '#8b5cf6' },
-          { label: 'Layout Sizes', value: '11', color: '#10b981' },
-          { label: 'Radius Values', value: '9', color: '#f59e0b' },
-          { label: 'Duration Values', value: '8', color: '#3b82f6' },
+          { label: 'Spacing Values', value: '31' },
+          { label: 'Layout Sizes', value: '11' },
+          { label: 'Radius Values', value: '9' },
+          { label: 'Duration Values', value: '8' },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -274,10 +193,10 @@ export default function SpacingPage() {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 'var(--font-size-h4)', fontWeight: 700, color: stat.color, marginBottom: 'var(--spacing-1)' }}>
+            <div style={{ fontSize: 'var(--font-size-h4)', fontWeight: 700, color: 'var(--color-brand)', marginBottom: 'var(--spacing-1)' }}>
               {stat.value}
             </div>
-            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
+            <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {stat.label}
             </div>
           </div>
@@ -286,13 +205,29 @@ export default function SpacingPage() {
 
       {/* Spacing Scale - Table Only */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <div style={{ marginBottom: 'var(--spacing-4)' }}>
-          <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-            Spacing Scale
-          </h2>
-          <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
-            31 spacing values from 0px to 256px
-          </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <MoveHorizontal size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Spacing Scale
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              31 spacing values from 0px to 256px
+            </p>
+          </div>
         </div>
 
         <div style={{ backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-card-border)', overflow: 'hidden' }}>
@@ -332,7 +267,7 @@ export default function SpacingPage() {
                 <div style={{ width: Math.min(token.pixels, 256), height: 16, backgroundColor: 'var(--color-brand)', borderRadius: 'var(--radius-sm)', minWidth: token.pixels > 0 ? 2 : 0 }} />
               </div>
               <div>
-                <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+                <TokenCopyButton value={`var(${token.cssVariable})`} variant="primary" />
               </div>
             </div>
           ))}
@@ -341,12 +276,30 @@ export default function SpacingPage() {
 
       {/* Layout Sizes */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Layout Sizes
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          Container and max-width values for responsive layouts
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <LayoutGrid size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Layout Sizes
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              Container and max-width values for responsive layouts
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {LAYOUT_TOKENS.map((token) => (
             <div key={token.key} style={{ backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', padding: 'var(--spacing-4)', border: '1px solid var(--color-card-border)' }}>
@@ -354,9 +307,8 @@ export default function SpacingPage() {
                 <span style={{ fontSize: 'var(--font-size-body)', fontWeight: 600, color: 'var(--color-foreground)' }}>{token.label}</span>
                 <span style={{ fontSize: 'var(--font-size-label)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-muted)' }}>{token.pixels}px</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>
-                <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', flex: 1 }}>{token.cssVariable}</span>
-                <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+              <div style={{ marginBottom: 'var(--spacing-2)' }}>
+                <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
               </div>
               <p style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>{token.use}</p>
             </div>
@@ -366,12 +318,30 @@ export default function SpacingPage() {
 
       {/* Border Radius */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Border Radius
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          9 radius values for consistent corner rounding
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Square size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Border Radius
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              9 radius values for consistent corner rounding
+            </p>
+          </div>
+        </div>
         <div style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-card-border)', borderRadius: 'var(--radius-xl)', overflow: 'hidden' }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -400,7 +370,7 @@ export default function SpacingPage() {
                       {token.value}
                     </td>
                     <td style={{ padding: 'var(--spacing-3) var(--spacing-4)', textAlign: 'center' }}>
-                      <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+                      <TokenCopyButton value={`var(${token.cssVariable})`} variant="primary" />
                     </td>
                   </tr>
                 ))}
@@ -412,19 +382,36 @@ export default function SpacingPage() {
 
       {/* Duration / Animation */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Duration / Animation
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          8 timing values for transitions and animations
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Clock size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Duration / Animation
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              8 timing values for transitions and animations
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {DURATION_TOKENS.map((token) => (
             <div key={token.key} style={{ backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', padding: 'var(--spacing-4)', border: '1px solid var(--color-card-border)' }}>
               <div style={{ fontSize: 'var(--font-size-h5)', fontWeight: 700, color: 'var(--color-brand)', marginBottom: 'var(--spacing-1)' }}>{token.value}</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>
-                <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-muted)', flex: 1 }}>{token.cssVariable}</span>
-                <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+              <div style={{ marginBottom: 'var(--spacing-2)' }}>
+                <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
               </div>
               <p style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>{token.use}</p>
             </div>
@@ -434,20 +421,37 @@ export default function SpacingPage() {
 
       {/* Line Heights */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Line Heights
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          6 line height multipliers for typography
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <SeparatorHorizontal size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Line Heights
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              6 line height multipliers for typography
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {LINE_HEIGHT_TOKENS.map((token) => (
             <div key={token.key} style={{ backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', padding: 'var(--spacing-4)', border: '1px solid var(--color-card-border)' }}>
               <div style={{ fontSize: 'var(--font-size-h5)', fontWeight: 700, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>{token.value}</div>
               <div style={{ fontSize: 'var(--font-size-label)', fontWeight: 500, color: 'var(--color-brand)', marginBottom: 'var(--spacing-2)', textTransform: 'capitalize' }}>{token.key}</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>
-                <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-muted)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>{token.cssVariable}</span>
-                <CopyButton value={`var(${token.cssVariable})`} size="sm" />
+              <div style={{ marginBottom: 'var(--spacing-2)' }}>
+                <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
               </div>
               <p style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>{token.description}</p>
             </div>
@@ -457,12 +461,30 @@ export default function SpacingPage() {
 
       {/* Font Weights */}
       <section style={{ marginBottom: 'var(--spacing-12)' }}>
-        <h2 style={{ fontSize: 'var(--font-size-h5)', fontWeight: 600, color: 'var(--color-foreground)', marginBottom: 'var(--spacing-1)' }}>
-          Font Weights
-        </h2>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)', marginBottom: 'var(--spacing-4)' }}>
-          9 font weight values from thin (100) to black (900)
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
+          {/* H2 Icon Box - 48x48px, light purple bg, no border */}
+          <div style={{
+            width: 48,
+            height: 48,
+            borderRadius: 'var(--radius-lg)',
+            backgroundColor: 'rgba(68, 75, 140, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: 'var(--color-secondary)',
+          }}>
+            <Baseline size={20} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 'var(--font-size-h4)', fontWeight: 600, color: 'var(--color-foreground)', lineHeight: 'var(--line-height-tight)' }}>
+              Font Weights
+            </h2>
+            <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-muted)' }}>
+              9 font weight values from thin (100) to black (900)
+            </p>
+          </div>
+        </div>
         <div style={{ backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-card-border)', overflow: 'hidden' }}>
           {FONT_WEIGHT_TOKENS.map((token, index) => (
             <div
@@ -477,11 +499,12 @@ export default function SpacingPage() {
             >
               <span style={{ width: 80, fontSize: 'var(--font-size-label)', fontWeight: 600, color: 'var(--color-foreground)', textTransform: 'capitalize' }}>{token.key}</span>
               <span style={{ width: 40, fontSize: 'var(--font-size-label)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-muted)' }}>{token.value}</span>
-              <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', flex: 1 }}>{token.cssVariable}</span>
-              <span style={{ fontSize: 'var(--font-size-body)', fontWeight: parseInt(token.value), color: 'var(--color-foreground)', marginRight: 'var(--spacing-4)' }}>
+              <div style={{ flex: 1 }}>
+                <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
+              </div>
+              <span style={{ fontSize: 'var(--font-size-body)', fontWeight: parseInt(token.value), color: 'var(--color-foreground)', marginRight: 'var(--spacing-4)', minWidth: 180 }}>
                 The quick brown fox
               </span>
-              <CopyButton value={`var(${token.cssVariable})`} size="sm" />
             </div>
           ))}
         </div>
@@ -544,7 +567,7 @@ export default function SpacingPage() {
               fontWeight: 500,
             }}
           >
-            <Sparkles size={14} />
+            <Type size={14} />
             Typography
           </Link>
           <Link
