@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import ReactDOM from 'react-dom';
 import Link from 'next/link';
-import { ChevronRight, Copy, Check, Filter, Grid, List, Download, Search } from 'lucide-react';
+import { ChevronRight, Check, Filter, Grid, List, Download, Search } from 'lucide-react';
 import { ColorPaletteGrid, ColorPaletteData } from '@/components/tokens/ColorPaletteGrid';
 import { TokenLayer } from '@/lib/types';
+import { TokenCopyButton } from '@/components/TokenCopyButton';
 
 // Complete color palette data from 01-Primitives.json
 const COLOR_PALETTES: ColorPaletteData[] = [
@@ -544,7 +544,7 @@ export default function PrimitiveColorsPage() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats - Unified Theme */}
       <div
         style={{
           display: 'flex',
@@ -554,13 +554,13 @@ export default function PrimitiveColorsPage() {
         }}
       >
         {[
-          { label: 'Color Families', value: '22' },
-          { label: 'Shades per Family', value: '11' },
-          { label: 'Total Colors', value: '245' },
-          { label: 'Base Colors', value: '3' },
+          { label: 'Color Families', value: '22', color: 'var(--color-brand)' },
+          { label: 'Shades per Family', value: '11', color: 'var(--color-secondary)' },
+          { label: 'Total Colors', value: '245', color: 'var(--color-brand)' },
+          { label: 'Base Colors', value: '3', color: 'var(--color-secondary)' },
         ].map((stat) => (
           <div key={stat.label} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--spacing-2)' }}>
-            <span style={{ fontSize: 'var(--font-size-h5)', fontWeight: 700, color: 'var(--color-brand)' }}>
+            <span style={{ fontSize: 'var(--font-size-h5)', fontWeight: 700, color: stat.color }}>
               {stat.value}
             </span>
             <span style={{ fontSize: 'var(--font-size-label)', color: 'var(--color-muted)' }}>
@@ -673,107 +673,12 @@ export default function PrimitiveColorsPage() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)' }}>
-            <CopyButton value={`var(${selectedShade.cssVariable})`} label="CSS Variable" />
-            <CopyButton value={selectedShade.hex} label="Hex Value" />
-            <CopyButton value={selectedShade.cssVariable} label="Variable Name" />
+            <TokenCopyButton value={`var(${selectedShade.cssVariable})`} label="CSS Variable" />
+            <TokenCopyButton value={selectedShade.hex} label="Hex Value" />
+            <TokenCopyButton value={selectedShade.cssVariable} label="Variable Name" />
           </div>
         </div>
       )}
     </div>
-  );
-}
-
-/** Simple copy button component */
-function CopyButton({ value, label }: { value: string; label: string }) {
-  const [copied, setCopied] = useState(false);
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setTooltipPos({ x: rect.right + 8, y: rect.top + rect.height / 2 });
-      }
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setTooltipPos(null);
-      }, 1500);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        onClick={handleCopy}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 'var(--spacing-2) var(--spacing-3)',
-          backgroundColor: 'var(--color-background)',
-          border: 'none',
-          borderRadius: 'var(--radius-md)',
-          cursor: 'pointer',
-          transition: 'all var(--duration-100) var(--ease-out)',
-          width: '100%',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'var(--color-card-border)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'var(--color-background)';
-        }}
-      >
-        <div style={{ textAlign: 'left' }}>
-          <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-muted)' }}>
-            {label}
-          </div>
-          <div
-            style={{
-              fontSize: 'var(--font-size-label)',
-              fontFamily: 'ui-monospace, monospace',
-              color: 'var(--color-foreground)',
-              maxWidth: 200,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {value}
-          </div>
-        </div>
-        <Copy size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
-      </button>
-      {copied && tooltipPos && typeof document !== 'undefined' && ReactDOM.createPortal(
-        <div
-          style={{
-            position: 'fixed',
-            left: tooltipPos.x,
-            top: tooltipPos.y,
-            transform: 'translateY(-50%)',
-            padding: '6px 10px',
-            backgroundColor: '#1e293b',
-            color: '#ffffff',
-            fontSize: '12px',
-            fontWeight: 500,
-            borderRadius: '6px',
-            whiteSpace: 'nowrap',
-            zIndex: 9999,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            pointerEvents: 'none',
-            animation: 'tooltipSlideIn 0.15s ease-out',
-          }}
-        >
-          Copied!
-        </div>,
-        document.body
-      )}
-    </>
   );
 }

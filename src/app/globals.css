@@ -236,20 +236,20 @@
 
   /* ========================================
      SEMANTIC - Typography
-     Defaulting to Major Third (Expressive)
+     Defaulting to Major Second (Conservative) for Documentation
      ======================================== */
   
-  --font-size-caption: var(--font-size-2xs--mt);
-  --font-size-label: var(--font-size-xs--mt);
-  --font-size-body-small: var(--font-size-sm--mt);
-  --font-size-body: var(--font-size-md--mt);
-  --font-size-lead: var(--font-size-lg--mt);
-  --font-size-h6: var(--font-size-xl--mt);
-  --font-size-h5: var(--font-size-2xl--mt);
-  --font-size-h4: var(--font-size-3xl--mt);
-  --font-size-h3: var(--font-size-4xl--mt);
-  --font-size-h2: var(--font-size-5xl--mt);
-  --font-size-h1: var(--font-size-6xl--mt);
+  --font-size-caption: var(--font-size-2xs--ms);
+  --font-size-label: var(--font-size-xs--ms);
+  --font-size-body-small: var(--font-size-sm--ms);
+  --font-size-body: var(--font-size-md--ms);
+  --font-size-lead: var(--font-size-lg--ms);
+  --font-size-h6: var(--font-size-xl--ms);
+  --font-size-h5: var(--font-size-2xl--ms);
+  --font-size-h4: var(--font-size-3xl--ms);
+  --font-size-h3: var(--font-size-4xl--ms);
+  --font-size-h2: var(--font-size-5xl--ms);
+  --font-size-h1: var(--font-size-6xl--ms);
 
 
   /* ========================================
