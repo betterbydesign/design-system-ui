@@ -308,10 +308,10 @@ export default function Home() {
           bgColor="rgba(6, 182, 212, 0.1)"
         />
         <FeatureCard 
-          title="Theme Preview"
-          description="Interactive preview panel to test colors, spacing, and components."
+          title="Theme Generator"
+          description="Create and preview custom themes with live preview and export options."
           icon={Eye}
-          href="/preview"
+          href="/generator"
           color="#10B981"
           bgColor="rgba(16, 185, 129, 0.1)"
         />

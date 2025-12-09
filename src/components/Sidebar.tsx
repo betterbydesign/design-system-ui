@@ -8,7 +8,6 @@ import {
   Palette, 
   Type, 
   Component,
-  Eye,
   ChevronRight,
   Layers,
   Box,
@@ -18,6 +17,7 @@ import {
   Ruler,
   Globe,
   Sparkles,
+  Wand2,
 } from 'lucide-react';
 
 interface NavItem {
@@ -79,7 +79,7 @@ const navSections: NavSection[] = [
   {
     section: 'Tools',
     items: [
-      { name: 'Theme Preview', href: '/preview', icon: Eye, description: 'Interactive preview' },
+      { name: 'Theme Generator', href: '/generator', icon: Wand2, description: 'Create custom themes' },
     ]
   }
 ];

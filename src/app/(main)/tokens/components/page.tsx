@@ -431,8 +431,11 @@ const ALL_COMPONENTS: ComponentSection[] = [BUTTON_TOKENS, CARD_TOKENS, INPUT_TO
 // HELPER COMPONENTS
 // =============================================================================
 
-function ReferenceChain({ token }: { token: ComponentToken }) {
-  // Flow: Value → Primitive → Semantic → Component
+function ReferenceChain({ token, componentName }: { token: ComponentToken; componentName: string }) {
+  // Flow: Raw → Primitive → Semantic → Component (left to right)
+  // Build component dot notation name (e.g., "Button.Background")
+  const componentPropertyName = `${componentName}.${token.property}`;
+  
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', flexWrap: 'wrap' }}>
       {/* Raw Value */}
@@ -440,8 +443,8 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--spacing-1)',
-          padding: '2px 6px',
+          gap: 'var(--spacing-1-5)',
+          padding: 'var(--spacing-1) var(--spacing-2)',
           backgroundColor: 'var(--color-background)',
           border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-md)',
@@ -455,19 +458,19 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
       {/* Primitive Layer */}
       {token.primitiveRef && (
         <>
-          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+          <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--spacing-1)',
-              padding: '2px 6px',
+              gap: 'var(--spacing-1-5)',
+              padding: 'var(--spacing-1) var(--spacing-2)',
               backgroundColor: 'rgba(68, 75, 140, 0.08)',
               border: '1px solid rgba(68, 75, 140, 0.15)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Hash size={10} style={{ color: 'var(--color-secondary)' }} />
+            <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>
               {token.primitiveRef}
             </span>
@@ -478,19 +481,19 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
       {/* Semantic Layer (if exists) */}
       {token.semanticRef && (
         <>
-          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+          <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--spacing-1)',
-              padding: '2px 6px',
+              gap: 'var(--spacing-1-5)',
+              padding: 'var(--spacing-1) var(--spacing-2)',
               backgroundColor: 'rgba(42, 175, 184, 0.08)',
               border: '1px solid rgba(42, 175, 184, 0.2)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Sparkles size={10} style={{ color: 'var(--color-brand)' }} />
+            <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', fontWeight: 500 }}>
               {token.semanticRef}
             </span>
@@ -499,21 +502,21 @@ function ReferenceChain({ token }: { token: ComponentToken }) {
       )}
 
       {/* Component Layer */}
-      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+      <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--spacing-1)',
-          padding: '2px 6px',
-          backgroundColor: 'rgba(42, 175, 184, 0.08)',
-          border: '1px solid rgba(42, 175, 184, 0.2)',
+          gap: 'var(--spacing-1-5)',
+          padding: 'var(--spacing-1) var(--spacing-2)',
+          backgroundColor: 'rgba(68, 75, 140, 0.08)',
+          border: '1px solid rgba(68, 75, 140, 0.15)',
           borderRadius: 'var(--radius-md)',
         }}
       >
-        <Box size={10} style={{ color: 'var(--color-brand)' }} />
-        <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: 'var(--color-brand)' }}>
-          Component
+        <Component size={12} style={{ color: 'var(--color-secondary)' }} />
+        <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', fontWeight: 500, color: 'var(--color-secondary)' }}>
+          {componentPropertyName}
         </span>
       </div>
     </div>
@@ -553,13 +556,13 @@ function ColorPreview({ hex }: { hex: string }) {
   );
 }
 
-function TokenRow({ token }: { token: ComponentToken }) {
+function TokenRow({ token, componentName }: { token: ComponentToken; componentName: string }) {
   return (
     <div
       className="token-row"
       style={{
         display: 'grid',
-        gridTemplateColumns: token.type === 'color' ? '48px 2fr 1.5fr' : '2fr 1.5fr',
+        gridTemplateColumns: token.type === 'color' ? '48px 1fr 2fr' : '1fr 2fr',
         gap: 'var(--spacing-4)',
         alignItems: 'center',
         padding: 'var(--spacing-3) var(--spacing-4)',
@@ -603,13 +606,13 @@ function TokenRow({ token }: { token: ComponentToken }) {
       
       {/* Reference Chain */}
       <div>
-        <ReferenceChain token={token} />
+        <ReferenceChain token={token} componentName={componentName} />
       </div>
     </div>
   );
 }
 
-function VariantSection({ variant, componentColor }: { variant: ComponentVariant; componentColor: string }) {
+function VariantSection({ variant, componentColor, componentName }: { variant: ComponentVariant; componentColor: string; componentName: string }) {
   const [isExpanded, setIsExpanded] = useState(true);
   
   return (
@@ -680,7 +683,7 @@ function VariantSection({ variant, componentColor }: { variant: ComponentVariant
           )}
           <div>
             {variant.tokens.map((token) => (
-              <TokenRow key={token.cssVariable} token={token} />
+              <TokenRow key={token.cssVariable} token={token} componentName={componentName} />
             ))}
           </div>
         </div>
@@ -927,33 +930,33 @@ export default function ComponentTokensPage() {
         >
           Token Reference Chain
         </h3>
-        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-foreground)', lineHeight: 'var(--line-height-relaxed)', marginBottom: 'var(--spacing-3)' }}>
+        <p style={{ fontSize: 'var(--font-size-body-small)', color: 'var(--color-foreground)', lineHeight: 'var(--line-height-relaxed)', marginBottom: 'var(--spacing-4)' }}>
           Component tokens sit at layer 4 of the token architecture. Values flow from primitives through 
           semantic tokens to components, ensuring design consistency and easy theming.
         </p>
-        {/* Flow: Value → Primitive → Semantic → Component */}
+        {/* Flow: Raw → Primitive → Semantic → Component (left to right) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', flexWrap: 'wrap' }}>
-          {/* Value */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
+          {/* Raw Value */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1-5)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'var(--color-background)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-foreground)' }}>#34d399</span>
           </div>
-          <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <ArrowRight size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
           {/* Primitive */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(68, 75, 140, 0.08)', border: '1px solid rgba(68, 75, 140, 0.15)', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1-5)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(68, 75, 140, 0.08)', border: '1px solid rgba(68, 75, 140, 0.15)', borderRadius: 'var(--radius-md)' }}>
             <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>Emerald.400</span>
           </div>
-          <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <ArrowRight size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
           {/* Semantic */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(42, 175, 184, 0.08)', border: '1px solid rgba(42, 175, 184, 0.2)', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1-5)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(42, 175, 184, 0.08)', border: '1px solid rgba(42, 175, 184, 0.2)', borderRadius: 'var(--radius-md)' }}>
             <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', fontWeight: 500 }}>Color.Brand.Default</span>
           </div>
-          <ArrowRight size={14} style={{ color: 'var(--color-muted)' }} />
+          <ArrowRight size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
           {/* Component */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(42, 175, 184, 0.08)', border: '1px solid rgba(42, 175, 184, 0.2)', borderRadius: 'var(--radius-md)' }}>
-            <Box size={12} style={{ color: 'var(--color-brand)' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-brand)', fontWeight: 500 }}>Button.Background</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1-5)', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'rgba(68, 75, 140, 0.08)', border: '1px solid rgba(68, 75, 140, 0.15)', borderRadius: 'var(--radius-md)' }}>
+            <Component size={12} style={{ color: 'var(--color-secondary)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>Button.Background</span>
           </div>
         </div>
       </div>
@@ -1008,6 +1011,7 @@ export default function ComponentTokensPage() {
                   key={variant.id} 
                   variant={variant} 
                   componentColor={component.iconColor}
+                  componentName={component.name}
                 />
               ))}
             </div>

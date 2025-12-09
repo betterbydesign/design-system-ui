@@ -1,8 +1,8 @@
 # Altitude Design System UI - Project Agent
 
 > **Last Updated:** December 8, 2025  
-> **Status:** Phase 1 Complete - Ready for Phase 2  
-> **Current Phase:** Phase 2.1 - Token Flow Diagram Component
+> **Status:** Phase 2 Specification Complete - Ready for Implementation  
+> **Current Phase:** Phase 2 - Theme Generator
 
 ---
 
@@ -43,9 +43,9 @@ Located in `/tokens/`:
 
 ## 🎯 Priority Order
 
-1. **Documentation & Updates** - Update existing pages, add new token documentation
-2. **Node Relationship Viewer** - Interactive horizontal flow diagram
-3. **Export/Import API Themer** - Full playground with live updates and API endpoints
+1. **Documentation & Updates** - Update existing pages, add new token documentation ✅
+2. **Theme Generator** - Interactive three-panel tool for building custom themes with live preview
+3. **Export/Import** - Theme export in multiple formats and import/preset functionality
 
 ---
 
@@ -53,10 +53,10 @@ Located in `/tokens/`:
 
 | Decision | Choice | Notes |
 |----------|--------|-------|
-| Node Flow Style | Horizontal flow diagram | Left-to-right: Greenshift → Semantic → Primitives |
+| Theme Generator | Three-panel layout | Controls → Preview → Inspector |
+| Token Inspector | Inline chain visualization | Shows Component → Semantic → Primitive flow |
 | Greenshift Section | Secondary "Framework Adapters" section | Not prominently featured |
 | Dark Mode Display | Skip for now | Focus on Light mode first |
-| Token Explorer | Full playground with live updates | Most value for users |
 | Data Strategy | API endpoints | Future-proof for CMS integration |
 
 ### UI Styleguide Reference
@@ -95,8 +95,7 @@ src/
 │   ├── frameworks/
 │   │   └── greenshift/page.tsx       (WordPress mapping)
 │   ├── tools/
-│   │   ├── explorer/page.tsx         (Token playground)
-│   │   └── relationships/page.tsx    (Node flow viewer)
+│   │   └── generator/page.tsx        (Theme Generator)
 │   ├── preview/page.tsx              (UPDATE existing)
 │   └── page.tsx                      (UPDATE home)
 ├── components/
@@ -107,7 +106,7 @@ src/
 │   │   ├── SpacingVisual.tsx
 │   │   ├── RadiusCurveIcon.tsx
 │   │   └── TokenReferenceChain.tsx
-│   ├── TokenFlowDiagram.tsx
+│   ├── generator/                   (Theme Generator components)
 │   ├── TokenSearch.tsx
 │   └── Sidebar.tsx                   (UPDATE)
 ├── lib/
@@ -190,58 +189,69 @@ src/
 
 ---
 
-### Phase 2: Node Relationship Viewer
-> **Goal:** Interactive horizontal flow diagram showing token reference chains
+### Phase 2: Theme Generator ⭐ CURRENT
+> **Goal:** Interactive three-panel tool for building custom themes with live preview  
+> **Specification:** See `theme-generator-spec.md` for detailed component specs
 
-#### 2.1 Flow Diagram Component
-- [ ] Create `TokenFlowDiagram` component
-- [ ] Implement horizontal layout (Greenshift → Semantic → Primitives → Value)
-- [ ] Add node styling for each layer type
-- [ ] Add connecting lines/arrows between nodes
-- [ ] Add hover states showing full chain
-- [ ] Add click interaction to expand/focus nodes
+#### 2.1 Core Infrastructure
+- [ ] Create `ThemeGeneratorContext` for state management
+- [ ] Create `useThemeGenerator` hook for accessing/updating state
+- [ ] Set up CSS variable injection system
+- [ ] Create base layout component with three-panel structure
+- [ ] Create header component with logo, actions
 
-#### 2.2 Relationships Page
-- [ ] Create Relationships page (`tools/relationships/page.tsx`)
-- [ ] Add token selector (search/dropdown)
-- [ ] Display selected token's full dependency chain
-- [ ] Show "used by" references (reverse lookup)
-- [ ] Add layer filter (show specific layers only)
+#### 2.2 Reusable Control Components
+- [ ] Create `CollapsibleSection` component
+- [ ] Create `TokenVariableInfo` component ⚠️ CRITICAL for consistency
+- [ ] Create `ColorPickerControl` component with variable display
+- [ ] Create `NeutralScaleControl` component with affected variables
+- [ ] Create `RadiusControl` component with presets and sliders
+- [ ] Create `TypographyControl` component with scale selector
+- [ ] Create `ShadeSelector` component (reusable for colors)
 
-#### 2.3 Integration
-- [ ] Add "View Relationships" button to token chips
-- [ ] Link from documentation pages to relationship viewer
-- [ ] Add mini relationship preview on hover
+#### 2.3 Token Inspector
+- [ ] Create `TokenInspector` component
+- [ ] Create `TokenChainVisualizer` component
+- [ ] Create `AffectedTokensList` component
+- [ ] Implement element selection system in preview
+- [ ] Build token chain resolution logic
+
+#### 2.4 Live Preview
+- [ ] Create `PreviewToolbar` component (mode/device toggles)
+- [ ] Create `PreviewFrame` component with responsive container
+- [ ] Build mockup website components:
+  - [ ] Navigation bar
+  - [ ] Hero section
+  - [ ] Feature card grid
+  - [ ] Contact form
+  - [ ] Footer
+- [ ] Add click-to-inspect functionality
+- [ ] Add cascade highlight animation
+
+#### 2.5 Export & Polish
+- [ ] Create export modal component
+- [ ] Implement Figma JSON export
+- [ ] Implement CSS variables export
+- [ ] Implement Design Tokens JSON export
+- [ ] Create preset loader component
+- [ ] Implement localStorage persistence
+- [ ] Add URL state for shareable themes
+- [ ] Final QA pass for consistency
 
 ---
 
-### Phase 3: Export/Import API Themer
-> **Goal:** Full playground with live preview, value editing, and theme export
+### Phase 3: Export/Import Enhancements
+> **Goal:** Extend export formats and add theme import/preset functionality
 
-#### 3.1 Token Playground
-- [ ] Create Token Explorer page (`tools/explorer/page.tsx`)
-- [ ] Implement searchable/filterable token list
-- [ ] Add token type filters (color, number, string)
-- [ ] Add layer filters (Primitive, Semantic, Component, Greenshift)
-- [ ] Implement live value editing
-- [ ] Show real-time preview updates
-
-#### 3.2 Theme Preview Updates
-- [ ] Update Preview page to use API data
-- [ ] Add token variable names on component hover
-- [ ] Implement "swap primitive reference" functionality
-- [ ] Add theme state management
-- [ ] Show active token overrides
-
-#### 3.3 Export API
-- [ ] Create export API route (`api/tokens/export/route.ts`)
+#### 3.1 Export Formats
+- [x] Create export API route (`api/tokens/export/route.ts`) ✅
 - [ ] Support CSS variables export format
 - [ ] Support JSON export format
 - [ ] Support Figma-compatible JSON export
 - [ ] Support WordPress theme.json export
 - [ ] Add export UI with format selector
 
-#### 3.4 Import/Save Themes
+#### 3.2 Import/Save Themes
 - [ ] Create import functionality for custom themes
 - [ ] Add theme presets (default, custom variations)
 - [ ] Implement theme saving (localStorage initially)
@@ -428,7 +438,7 @@ interface Token {
     - Proper active state detection
     - Children navigation support
     - Consistent iconography
-- **Phase 1 Complete!** Ready to start Phase 2: Node Relationship Viewer
+- **Phase 1 Complete!** Ready to start Phase 2: Theme Generator
 
 ### Session 8 - December 8, 2025
 - **Modernization 2.0 - UI Consistency Update:**
@@ -449,15 +459,32 @@ interface Token {
   - Unified architecture/info boxes to use secondary theme
   - Added uppercase + letter-spacing to stats labels
 
+### Session 9 - December 8, 2025
+- **Theme Generator Planning & Specifications:**
+  - Reviewed `theme-generator-plan.md` feature spec and HTML mockup
+  - Identified inconsistency issue: some controls show CSS variables, others don't
+  - Created comprehensive `theme-generator-spec.md` with:
+    - Detailed component specifications for all controls
+    - Token Display Standards (every control MUST show CSS variable)
+    - Style constraints aligned with `styleguide.md`
+    - 29 tasks organized into 5 sub-phases
+  - Reorganized project phases:
+    - **Removed** Phase 2 (Node Relationship Viewer) - replaced by Theme Generator
+    - **Phase 2:** Theme Generator (interactive three-panel tool)
+    - **Phase 3:** Export/Import Enhancements (consolidated)
+  - Token chain visualization will be in Theme Generator's Inspector panel
+
 ---
 
 ## 🚀 Getting Started (Next Session)
 
-1. **Start Phase 2** - Node Relationship Viewer
-2. Create `TokenFlowDiagram` component
-3. Implement horizontal layout (Greenshift → Semantic → Primitives → Value)
-4. Add node styling for each layer type
-5. Create Relationships page (`tools/relationships/page.tsx`)
+### Start Phase 2: Theme Generator
+1. Review `theme-generator-spec.md` for detailed specifications
+2. Create `ThemeGeneratorContext` for state management
+3. Build `TokenVariableInfo` component first (critical for consistency)
+4. Create `CollapsibleSection` component
+5. Build `ColorPickerControl` with proper variable display
+6. Create the three-panel layout structure
 
 ---
 
@@ -466,10 +493,10 @@ interface Token {
 | Phase | Status | Progress |
 |-------|--------|----------|
 | Phase 1: Documentation | ✅ Complete | 31/31 tasks |
-| Phase 2: Relationships | ⚪ Pending | 0/14 tasks |
-| Phase 3: Export/Import | ⚪ Pending | 0/21 tasks |
+| Phase 2: Theme Generator | 📋 Spec Complete | 0/29 tasks |
+| Phase 3: Export/Import | ⚪ Pending | 1/10 tasks |
 
-**Total Progress:** 31/66 tasks (47%)
+**Total Progress:** 32/70 tasks (46%)
 
 ---
 
@@ -478,5 +505,6 @@ interface Token {
 - Token Files: `/tokens/`
 - Current App: `http://localhost:3000`
 - **UI Styleguide: `styleguide.md`**
+- **Theme Generator Spec: `theme-generator-spec.md`** ⭐ NEW
 - Figma Import Guide: `/tokens/IMPORT-GUIDE.md`
 - CSS Reference: `/tokens/css-variables-reference.md`

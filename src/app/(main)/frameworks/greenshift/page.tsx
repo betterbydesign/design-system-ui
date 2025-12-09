@@ -15,6 +15,8 @@ import {
   Code,
   Zap,
   Globe,
+  Hash,
+  Sparkles,
 } from 'lucide-react';
 import { TokenLayer, TOKEN_LAYER_INFO } from '@/lib/types';
 
@@ -320,75 +322,122 @@ function CopyButton({ value, size = 'md' }: { value: string; size?: 'sm' | 'md' 
 }
 
 function ReferenceChain({ token }: { token: GreenshiftToken }) {
-  const greenshiftLayerInfo = TOKEN_LAYER_INFO[TokenLayer.Greenshift];
-  const semanticLayerInfo = TOKEN_LAYER_INFO[TokenLayer.Semantic];
-  const primitivesLayerInfo = TOKEN_LAYER_INFO[TokenLayer.Primitives];
+  // Parse the WP variable name into dot notation (e.g., "--wp--preset--color--brand" -> "Preset.Brand")
+  const parseWpVariableName = (wpVar: string): string => {
+    // Remove --wp-- prefix and split by --
+    const parts = wpVar.replace('--wp--', '').split('--');
+    // Capitalize each part and join with dots
+    return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('.');
+  };
+  
+  const greenshiftName = parseWpVariableName(token.wpVariable);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', flexWrap: 'wrap' }}>
-      {/* Raw Value - hex or number first */}
-      <span
+      {/* Raw Value */}
+      <div
         style={{
-          padding: '2px 6px',
-          borderRadius: 'var(--radius-sm)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--spacing-1-5)',
+          padding: 'var(--spacing-1) var(--spacing-2)',
+          borderRadius: 'var(--radius-md)',
           backgroundColor: 'var(--color-background)',
           border: '1px solid var(--color-border)',
-          fontSize: 'var(--font-size-caption)',
-          fontFamily: 'ui-monospace, monospace',
-          color: 'var(--color-foreground)',
         }}
       >
-        {token.resolvedValue}
-      </span>
-      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+        <span
+          style={{
+            fontSize: 'var(--font-size-caption)',
+            fontFamily: 'ui-monospace, monospace',
+            color: 'var(--color-foreground)',
+          }}
+        >
+          {token.resolvedValue}
+        </span>
+      </div>
 
       {/* Primitive Layer (if exists) */}
       {token.primitiveRef && (
         <>
-          <span
+          <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+          <div
             style={{
-              padding: '2px 6px',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: `${primitivesLayerInfo.color}15`,
-              color: primitivesLayerInfo.color,
-              fontSize: 'var(--font-size-caption)',
-              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-1-5)',
+              padding: 'var(--spacing-1) var(--spacing-2)',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: 'rgba(68, 75, 140, 0.08)',
+              border: '1px solid rgba(68, 75, 140, 0.15)',
             }}
           >
-            {token.primitiveRef}
-          </span>
-          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+            <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
+            <span
+              style={{
+                fontSize: 'var(--font-size-caption)',
+                fontFamily: 'ui-monospace, monospace',
+                fontWeight: 500,
+                color: 'var(--color-secondary)',
+              }}
+            >
+              {token.primitiveRef}
+            </span>
+          </div>
         </>
       )}
       
       {/* Semantic Layer */}
-      <span
+      <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+      <div
         style={{
-          padding: '2px 6px',
-          borderRadius: 'var(--radius-sm)',
-          backgroundColor: `${semanticLayerInfo.color}15`,
-          color: semanticLayerInfo.color,
-          fontSize: 'var(--font-size-caption)',
-          fontWeight: 500,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--spacing-1-5)',
+          padding: 'var(--spacing-1) var(--spacing-2)',
+          borderRadius: 'var(--radius-md)',
+          backgroundColor: 'rgba(42, 175, 184, 0.08)',
+          border: '1px solid rgba(42, 175, 184, 0.2)',
         }}
       >
-        {token.semanticRef}
-      </span>
+        <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
+        <span
+          style={{
+            fontSize: 'var(--font-size-caption)',
+            fontFamily: 'ui-monospace, monospace',
+            fontWeight: 500,
+            color: 'var(--color-brand)',
+          }}
+        >
+          {token.semanticRef}
+        </span>
+      </div>
       
-      {/* Greenshift Layer - framework output last */}
-      <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
-      <span
+      {/* Greenshift Layer */}
+      <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+      <div
         style={{
-          padding: '2px 6px',
-          borderRadius: 'var(--radius-sm)',
-          backgroundColor: `${greenshiftLayerInfo.color}15`,
-          color: greenshiftLayerInfo.color,
-          fontSize: 'var(--font-size-caption)',
-          fontWeight: 500,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--spacing-1-5)',
+          padding: 'var(--spacing-1) var(--spacing-2)',
+          borderRadius: 'var(--radius-md)',
+          backgroundColor: 'rgba(6, 182, 212, 0.08)',
+          border: '1px solid rgba(6, 182, 212, 0.2)',
         }}
       >
-        GRS
-      </span>
+        <Globe size={12} style={{ color: '#06b6d4' }} />
+        <span
+          style={{
+            fontSize: 'var(--font-size-caption)',
+            fontFamily: 'ui-monospace, monospace',
+            fontWeight: 500,
+            color: '#06b6d4',
+          }}
+        >
+          {greenshiftName}
+        </span>
+      </div>
     </div>
   );
 }
@@ -414,7 +463,7 @@ function TokenRow({ token }: { token: GreenshiftToken }) {
       className="token-row"
       style={{
         display: 'grid',
-        gridTemplateColumns: token.type === 'color' ? '48px 1fr 1fr auto' : '1fr 1fr auto',
+        gridTemplateColumns: token.type === 'color' ? '48px 1fr 2fr auto' : '1fr 2fr auto',
         gap: 'var(--spacing-4)',
         alignItems: 'center',
         padding: 'var(--spacing-3) var(--spacing-4)',
@@ -428,7 +477,7 @@ function TokenRow({ token }: { token: GreenshiftToken }) {
       
       {/* Token Info */}
       <div style={{ minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>
           <span style={{ fontSize: 'var(--font-size-body-small)', fontWeight: 600, color: 'var(--color-foreground)' }}>
             {token.name}
           </span>

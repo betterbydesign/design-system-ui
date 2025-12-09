@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -13,6 +12,12 @@ export const metadata: Metadata = {
   description: "Design system tokens and components for Altitude Marketing",
 };
 
+/**
+ * Root Layout
+ * 
+ * Minimal root layout that just provides html/body wrapper with font.
+ * Page-specific layouts (sidebar, fullscreen, etc.) are handled by route groups.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,14 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="flex-1 ml-[var(--sidebar-width)] overflow-y-auto">
-            <div className="max-w-[var(--layout-wide-width)] mx-auto px-[var(--spacing-8)] py-[var(--spacing-8)]">
-              {children}
-            </div>
-          </main>
-        </div>
+        {children}
       </body>
     </html>
   );

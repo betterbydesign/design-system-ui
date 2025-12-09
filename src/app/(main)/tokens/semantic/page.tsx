@@ -182,7 +182,7 @@ const SEMANTIC_LAYOUT: SemanticLayoutToken[] = [
 // HELPER COMPONENTS
 // =============================================================================
 
-function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
+function ColorSwatchToken({ token, groupName }: { token: SemanticColorToken; groupName: string }) {
   // Determine if color is light for text contrast
   const isLightColor = (hex: string): boolean => {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -191,6 +191,9 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
     return luminance > 0.5;
   };
+
+  // Build semantic dot notation name (e.g., "Brand.Default")
+  const semanticName = `${groupName}.${token.name}`;
 
   return (
     <div
@@ -203,22 +206,23 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
         transition: 'all var(--duration-150) var(--ease-out)',
       }}
     >
-      {/* Color Preview - no buttons inside */}
+      {/* Color Preview - larger consistent size */}
       <div
         style={{
-          height: 64,
+          height: 96,
           backgroundColor: token.resolvedHex,
           display: 'flex',
           alignItems: 'flex-end',
-          padding: 'var(--spacing-2)',
+          padding: 'var(--spacing-3)',
           borderBottom: token.resolvedHex === '#ffffff' ? '1px solid var(--color-card-border)' : 'none',
         }}
       >
         <span
           style={{
-            fontSize: 'var(--font-size-caption)',
+            fontSize: 'var(--font-size-label)',
             fontFamily: 'ui-monospace, monospace',
-            color: isLightColor(token.resolvedHex) ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.8)',
+            color: isLightColor(token.resolvedHex) ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.9)',
+            fontWeight: 500,
           }}
         >
           {token.resolvedHex.toUpperCase()}
@@ -226,27 +230,27 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
       </div>
 
       {/* Token Info */}
-      <div style={{ padding: 'var(--spacing-3)' }}>
+      <div style={{ padding: 'var(--spacing-4)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--spacing-2)' }}>
-          <span style={{ fontSize: 'var(--font-size-label)', fontWeight: 600, color: 'var(--color-foreground)' }}>
+          <span style={{ fontSize: 'var(--font-size-body-small)', fontWeight: 600, color: 'var(--color-foreground)' }}>
             {token.name}
           </span>
         </div>
 
         {/* CSS Variable */}
-        <div style={{ marginBottom: 'var(--spacing-3)' }}>
+        <div style={{ marginBottom: 'var(--spacing-4)' }}>
           <TokenCopyButton value={`var(${token.cssVariable})`} displayValue={token.cssVariable} variant="primary" />
         </div>
 
-        {/* Reference Chain: Value → Primitive → Semantic */}
+        {/* Reference Chain: Raw → Primitive → Semantic (left to right) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-1)', flexWrap: 'wrap' }}>
           {/* Raw Value */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--spacing-1)',
-              padding: '2px 6px',
+              gap: 'var(--spacing-1-5)',
+              padding: 'var(--spacing-1) var(--spacing-2)',
               backgroundColor: 'var(--color-background)',
               border: '1px solid var(--color-border)',
               borderRadius: 'var(--radius-md)',
@@ -256,40 +260,44 @@ function ColorSwatchToken({ token }: { token: SemanticColorToken }) {
               {token.resolvedHex}
             </span>
           </div>
-          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+          
+          <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+          
           {/* Primitive */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--spacing-1)',
-              padding: '2px 6px',
+              gap: 'var(--spacing-1-5)',
+              padding: 'var(--spacing-1) var(--spacing-2)',
               backgroundColor: 'rgba(68, 75, 140, 0.08)',
               border: '1px solid rgba(68, 75, 140, 0.15)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Hash size={10} style={{ color: 'var(--color-secondary)' }} />
+            <Hash size={12} style={{ color: 'var(--color-secondary)' }} />
             <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', color: 'var(--color-secondary)', fontWeight: 500 }}>
               {token.reference}
             </span>
           </div>
-          <ArrowRight size={10} style={{ color: 'var(--color-muted)' }} />
+          
+          <ArrowRight size={12} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+          
           {/* Semantic */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'var(--spacing-1)',
-              padding: '2px 6px',
+              gap: 'var(--spacing-1-5)',
+              padding: 'var(--spacing-1) var(--spacing-2)',
               backgroundColor: 'rgba(42, 175, 184, 0.08)',
               border: '1px solid rgba(42, 175, 184, 0.2)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <Sparkles size={10} style={{ color: 'var(--color-brand)' }} />
-            <span style={{ fontSize: 'var(--font-size-caption)', fontWeight: 500, color: 'var(--color-brand)' }}>
-              Semantic
+            <Sparkles size={12} style={{ color: 'var(--color-brand)' }} />
+            <span style={{ fontSize: 'var(--font-size-caption)', fontFamily: 'ui-monospace, monospace', fontWeight: 500, color: 'var(--color-brand)' }}>
+              {semanticName}
             </span>
           </div>
         </div>
@@ -553,12 +561,12 @@ export default function SemanticTokensPage() {
                   <div
                     style={{
                       display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                      gap: 'var(--spacing-3)',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                      gap: 'var(--spacing-4)',
                     }}
                   >
                     {group.tokens.map((token) => (
-                      <ColorSwatchToken key={token.cssVariable} token={token} />
+                      <ColorSwatchToken key={token.cssVariable} token={token} groupName={group.name} />
                     ))}
                   </div>
                 </div>

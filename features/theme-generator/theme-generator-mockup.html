@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme Generator - Design System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.min.css">
+  <style>
+    /* Custom CSS Variables - The "theme" being edited */
+    :root {
+      /* Primitives (source of truth) */
+      --primitive-emerald-50: #ecfdf5;
+      --primitive-emerald-100: #d1fae5;
+      --primitive-emerald-200: #a7f3d0;
+      --primitive-emerald-300: #6ee7b7;
+      --primitive-emerald-400: #34d399;
+      --primitive-emerald-500: #10b981;
+      --primitive-emerald-600: #059669;
+      --primitive-emerald-700: #047857;
+      --primitive-emerald-800: #065f46;
+      --primitive-emerald-900: #064e3b;
+      
+      --primitive-violet-100: #ede9fe;
+      --primitive-violet-400: #a78bfa;
+      --primitive-violet-900: #4c1d95;
+      --primitive-violet-950: #2e1065;
+      
+      --primitive-gray-50: #f9fafb;
+      --primitive-gray-100: #f3f4f6;
+      --primitive-gray-200: #e5e7eb;
+      --primitive-gray-300: #d1d5db;
+      --primitive-gray-400: #9ca3af;
+      --primitive-gray-500: #6b7280;
+      --primitive-gray-900: #111827;
+      
+      /* Semantic (mapped from primitives) */
+      --color-brand: var(--primitive-emerald-400);
+      --color-brand-hover: var(--primitive-emerald-500);
+      --color-brand-light: var(--primitive-emerald-100);
+      --color-brand-dark: var(--primitive-emerald-700);
+      
+      --color-secondary: var(--primitive-violet-900);
+      --color-secondary-hover: var(--primitive-violet-950);
+      --color-secondary-light: var(--primitive-violet-100);
+      
+      --color-background: var(--primitive-gray-50);
+      --color-background-alt: var(--primitive-gray-100);
+      --color-surface: #ffffff;
+      
+      --color-text-foreground: var(--primitive-gray-900);
+      --color-text-muted: var(--primitive-gray-500);
+      --color-text-subtle: var(--primitive-gray-400);
+      --color-text-on-brand: #ffffff;
+      
+      --color-border: var(--primitive-gray-200);
+      --color-border-strong: var(--primitive-gray-300);
+      
+      /* Radius */
+      --radius-button: 6px;
+      --radius-card: 8px;
+      --radius-input: 4px;
+      --radius-badge: 9999px;
+      
+      /* Component (mapped from semantic) */
+      --button-bg: var(--color-brand);
+      --button-bg-hover: var(--color-brand-hover);
+      --button-text: var(--color-text-on-brand);
+      --button-radius: var(--radius-button);
+      
+      --card-bg: var(--color-surface);
+      --card-border: var(--color-border);
+      --card-radius: var(--radius-card);
+      
+      --input-bg: var(--color-surface);
+      --input-border: var(--color-border);
+      --input-radius: var(--radius-input);
+    }
+
+    /* Scrollbar styling */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: var(--color-background-alt);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: var(--color-border-strong);
+      border-radius: 3px;
+    }
+
+    /* Color swatch styles */
+    .color-swatch {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .color-swatch:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .color-swatch.selected {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-brand);
+    }
+
+    /* Inspector connection line */
+    .token-chain-line {
+      width: 2px;
+      background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-border) 100%);
+    }
+
+    /* Preview frame */
+    .preview-frame {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 3px;
+      border-radius: 12px;
+    }
+    .preview-content {
+      background: var(--color-background);
+      border-radius: 10px;
+    }
+
+    /* Animated highlight for cascade demo */
+    @keyframes pulse-highlight {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+      50% { box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.4); }
+    }
+    .cascade-highlight {
+      animation: pulse-highlight 1.5s ease-in-out infinite;
+    }
+
+    /* Panel collapse animation */
+    .panel-content {
+      transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+      overflow: hidden;
+    }
+    .panel-content.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    /* Custom gray-850 for nested panels */
+    .bg-gray-850 {
+      background-color: rgb(26, 32, 44);
+    }
+    
+    /* Hover state for gray-750 */
+    .hover\:bg-gray-750:hover {
+      background-color: rgb(45, 55, 72);
+    }
+    
+    /* Token card styling */
+    .token-card {
+      background: linear-gradient(to right, rgba(26, 32, 44, 1), rgba(31, 41, 55, 0.8));
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+  
+  <!-- Main Header -->
+  <header class="sticky top-0 z-50 bg-gray-900/95 backdrop-blur border-b border-gray-800">
+    <div class="flex items-center justify-between px-6 py-3">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+            </svg>
+          </div>
+          <span class="font-semibold text-lg">Theme Generator</span>
+        </div>
+        <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Beta</span>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button class="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors">
+          Load Preset
+        </button>
+        <button class="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors">
+          Reset
+        </button>
+        <button class="px-4 py-2 text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+          </svg>
+          Export Theme
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area - Three Column Layout -->
+  <div class="flex h-[calc(100vh-57px)]">
+    
+    <!-- LEFT PANEL: Token Controls -->
+    <aside class="w-80 bg-gray-900 border-r border-gray-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-gray-800">
+        <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Token Controls</h2>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+        
+        <!-- COLORS SECTION -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700/50">
+          <button class="w-full flex items-center justify-between p-4 hover:bg-gray-750 transition-colors" onclick="togglePanel('colors')">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                </svg>
+              <span class="font-medium">Colors</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-500 transform transition-transform" id="colors-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          <div class="panel-content" id="colors-panel">
+            <div class="px-4 pb-4 space-y-5">
+              
+              <!-- Brand Color Control -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="text-sm font-medium text-gray-300">Brand Color</label>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-md shadow-inner" style="background: var(--color-brand);"></div>
+                    <span class="text-xs text-gray-500 font-mono">#34d399</span>
+                  </div>
+                </div>
+                
+                <!-- Primitive Selector -->
+                <div class="relative">
+                  <select class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500">
+                    <option>Blue</option>
+                    <option>Indigo</option>
+                    <option>Violet</option>
+                    <option>Purple</option>
+                    <option selected>Emerald</option>
+                    <option>Teal</option>
+                    <option>Cyan</option>
+                    <option>Sky</option>
+                    <option>Green</option>
+                    <option>Lime</option>
+                    <option>Amber</option>
+                    <option>Orange</option>
+                    <option>Red</option>
+                    <option>Rose</option>
+                    <option>Pink</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                
+                <!-- Shade Selector -->
+                <div class="space-y-2">
+                  <div class="flex justify-between text-xs text-gray-500">
+                    <span>50</span>
+                    <span>500</span>
+                    <span>950</span>
+                  </div>
+                  <div class="flex gap-1">
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-50" title="50"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-100" title="100"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-200" title="200"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-300" title="300"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-400 selected" title="400"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-500" title="500"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-600" title="600"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-700" title="700"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-800" title="800"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-900" title="900"></button>
+                    <button class="color-swatch flex-1 h-8 rounded bg-emerald-950" title="950"></button>
+                  </div>
+                  <div class="text-center text-xs text-gray-400">Shade: <span class="font-medium text-emerald-400">400</span></div>
+                </div>
+                
+                <!-- Quick info -->
+                <div class="text-xs text-gray-500 bg-gray-800 rounded-lg p-2">
+                  <span class="text-gray-400">CSS Variable:</span>
+                  <code class="text-emerald-400 ml-1">--color-brand</code>
+                </div>
+              </div>
+              
+              <hr class="border-gray-700">
+              
+              <!-- Secondary Color Control -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="text-sm font-medium text-gray-300">Secondary Color</label>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-md shadow-inner" style="background: var(--color-secondary);"></div>
+                    <span class="text-xs text-gray-500 font-mono">#4c1d95</span>
+                  </div>
+                </div>
+                
+                <div class="relative">
+                  <select class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500">
+                    <option>Blue</option>
+                    <option>Indigo</option>
+                    <option selected>Violet</option>
+                    <option>Purple</option>
+                    <option>Emerald</option>
+                    <option>Slate</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                
+                <div class="flex gap-1">
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-50" title="50"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-100" title="100"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-200" title="200"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-300" title="300"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-400" title="400"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-500" title="500"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-600" title="600"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-700" title="700"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-800" title="800"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-900 selected" title="900"></button>
+                  <button class="color-swatch flex-1 h-8 rounded bg-violet-950" title="950"></button>
+                </div>
+                <div class="text-center text-xs text-gray-400">Shade: <span class="font-medium text-violet-400">900</span></div>
+              </div>
+              
+              <hr class="border-gray-700">
+              
+              <!-- Neutral/Gray Selector -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="text-sm font-medium text-gray-300">Neutral Scale</label>
+                  <span class="text-xs text-gray-500">Background & Text</span>
+                </div>
+                
+                <div class="grid grid-cols-5 gap-2">
+                  <button class="group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-700 transition-colors border-2 border-transparent hover:border-gray-600">
+                    <div class="w-8 h-8 rounded-md bg-slate-500 ring-2 ring-white/10"></div>
+                    <span class="text-xs text-gray-500 group-hover:text-gray-300">Slate</span>
+                  </button>
+                  <button class="group flex flex-col items-center gap-1 p-2 rounded-lg bg-gray-700 border-2 border-emerald-500/50">
+                    <div class="w-8 h-8 rounded-md bg-gray-500 ring-2 ring-white/10"></div>
+                    <span class="text-xs text-gray-300">Gray</span>
+                  </button>
+                  <button class="group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-700 transition-colors border-2 border-transparent hover:border-gray-600">
+                    <div class="w-8 h-8 rounded-md bg-zinc-500 ring-2 ring-white/10"></div>
+                    <span class="text-xs text-gray-500 group-hover:text-gray-300">Zinc</span>
+                  </button>
+                  <button class="group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-700 transition-colors border-2 border-transparent hover:border-gray-600">
+                    <div class="w-8 h-8 rounded-md bg-neutral-500 ring-2 ring-white/10"></div>
+                    <span class="text-xs text-gray-500 group-hover:text-gray-300">Neutral</span>
+                  </button>
+                  <button class="group flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-700 transition-colors border-2 border-transparent hover:border-gray-600">
+                    <div class="w-8 h-8 rounded-md bg-stone-500 ring-2 ring-white/10"></div>
+                    <span class="text-xs text-gray-500 group-hover:text-gray-300">Stone</span>
+                  </button>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <!-- RADIUS SECTION -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700/50">
+          <button class="w-full flex items-center justify-between p-4 hover:bg-gray-750 transition-colors" onclick="togglePanel('radius')">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                </svg>
+              <span class="font-medium">Radius</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-500 transform transition-transform" id="radius-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          <div class="panel-content" id="radius-panel">
+            <div class="px-4 pb-4 space-y-4">
+              
+              <!-- Radius Presets -->
+              <div class="space-y-2">
+                <label class="text-xs text-gray-400 uppercase tracking-wider">Preset</label>
+                <div class="grid grid-cols-4 gap-2">
+                  <button class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700">
+                    <div class="w-10 h-10 bg-gray-600 rounded-none"></div>
+                    <span class="text-xs text-gray-400">Sharp</span>
+                  </button>
+                  <button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-gray-700 border-2 border-emerald-500/50">
+                    <div class="w-10 h-10 bg-gray-600 rounded-md"></div>
+                    <span class="text-xs text-white">Default</span>
+                  </button>
+                  <button class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700">
+                    <div class="w-10 h-10 bg-gray-600 rounded-xl"></div>
+                    <span class="text-xs text-gray-400">Rounded</span>
+                  </button>
+                  <button class="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700">
+                    <div class="w-10 h-10 bg-gray-600 rounded-full"></div>
+                    <span class="text-xs text-gray-400">Pill</span>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Individual Radius Controls -->
+              <div class="space-y-3">
+                <label class="text-xs text-gray-400 uppercase tracking-wider">Fine-tune</label>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-300">Button</span>
+                    <span class="text-xs font-mono text-emerald-400">6px</span>
+                  </div>
+                  <input type="range" min="0" max="24" value="6" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-300">Card</span>
+                    <span class="text-xs font-mono text-emerald-400">8px</span>
+                  </div>
+                  <input type="range" min="0" max="24" value="8" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-300">Input</span>
+                    <span class="text-xs font-mono text-emerald-400">4px</span>
+                  </div>
+                  <input type="range" min="0" max="24" value="4" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+              </div>
+              
+              <!-- Radius Preview -->
+              <div class="bg-gray-900 rounded-lg p-4 space-y-3">
+                <span class="text-xs text-gray-500">Preview</span>
+                <div class="flex items-center gap-3">
+                  <button class="px-4 py-2 text-sm bg-emerald-500 text-white" style="border-radius: var(--radius-button);">Button</button>
+                  <div class="flex-1 h-10 bg-gray-800 border border-gray-700" style="border-radius: var(--radius-card);"></div>
+                  <input type="text" placeholder="Input" class="px-3 py-2 text-sm bg-gray-800 border border-gray-700 w-24" style="border-radius: var(--radius-input);">
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <!-- TYPOGRAPHY SECTION -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700/50">
+          <button class="w-full flex items-center justify-between p-4 hover:bg-gray-750 transition-colors" onclick="togglePanel('typography')">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+              <span class="font-medium">Typography</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-500 transform transition-transform rotate-180" id="typography-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          <div class="panel-content collapsed" id="typography-panel">
+            <div class="px-4 pb-4 space-y-4">
+              
+              <!-- Type Scale Selector -->
+              <div class="space-y-2">
+                <label class="text-xs text-gray-400 uppercase tracking-wider">Type Scale</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <button class="p-3 rounded-lg bg-gray-700 border-2 border-emerald-500/50 text-left">
+                    <div class="text-sm font-medium text-white">Major Second</div>
+                    <div class="text-xs text-gray-400 mt-1">1.125 ratio • Compact</div>
+                  </button>
+                  <button class="p-3 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors text-left">
+                    <div class="text-sm font-medium text-gray-300">Major Third</div>
+                    <div class="text-xs text-gray-400 mt-1">1.250 ratio • Expressive</div>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Base Size -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-300">Base Size</span>
+                  <span class="text-xs font-mono text-emerald-400">16px</span>
+                </div>
+                <input type="range" min="14" max="20" value="16" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+              </div>
+              
+              <!-- Type Scale Preview -->
+              <div class="bg-gray-900 rounded-lg p-4 space-y-2">
+                <span class="text-xs text-gray-500">Scale Preview</span>
+                <div class="space-y-1">
+                  <div class="text-3xl font-bold text-white">Heading 1</div>
+                  <div class="text-2xl font-semibold text-white">Heading 2</div>
+                  <div class="text-xl font-medium text-white">Heading 3</div>
+                  <div class="text-base text-gray-300">Body text paragraph</div>
+                  <div class="text-sm text-gray-400">Small / Caption</div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </aside>
+    
+    <!-- CENTER PANEL: Live Preview -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-gray-950">
+      
+      <!-- Preview Controls Bar -->
+      <div class="flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-gray-900/50">
+        <div class="flex items-center gap-4">
+          <!-- Mode Toggle -->
+          <div class="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
+            <button class="px-3 py-1.5 text-sm rounded-md bg-gray-700 text-white">
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+              Light
+            </button>
+            <button class="px-3 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-colors">
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+              </svg>
+              Dark
+            </button>
+          </div>
+          
+          <!-- Device Toggle -->
+          <div class="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
+            <button class="px-3 py-1.5 text-sm rounded-md bg-gray-700 text-white" title="Desktop">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </button>
+            <button class="px-3 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-colors" title="Tablet">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </button>
+            <button class="px-3 py-1.5 text-sm rounded-md text-gray-400 hover:text-white transition-colors" title="Mobile">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-gray-500">Click any element to inspect</span>
+          <button class="p-2 text-gray-400 hover:text-white transition-colors" title="Zoom In">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path>
+            </svg>
+          </button>
+          <button class="p-2 text-gray-400 hover:text-white transition-colors" title="Zoom Out">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Preview Area -->
+      <div class="flex-1 overflow-auto p-8 flex items-start justify-center">
+        <div class="preview-frame w-full max-w-4xl">
+          <div class="preview-content overflow-hidden">
+            
+            <!-- MOCKUP WEBSITE -->
+            <div class="bg-white" style="background: var(--color-background);">
+              
+              <!-- Mock Navigation -->
+              <nav class="px-8 py-4 flex items-center justify-between border-b" style="border-color: var(--color-border); background: var(--color-surface);">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-lg" style="background: var(--color-brand);"></div>
+                  <span class="font-semibold" style="color: var(--color-text-foreground);">Acme Co</span>
+                </div>
+                <div class="flex items-center gap-6">
+                  <a href="#" class="text-sm" style="color: var(--color-text-muted);">Products</a>
+                  <a href="#" class="text-sm" style="color: var(--color-text-muted);">Solutions</a>
+                  <a href="#" class="text-sm" style="color: var(--color-text-muted);">Pricing</a>
+                  <button class="px-4 py-2 text-sm font-medium text-white cascade-highlight" style="background: var(--button-bg); border-radius: var(--button-radius);">Get Started</button>
+                </div>
+              </nav>
+              
+              <!-- Mock Hero Section -->
+              <section class="px-8 py-16 text-center" style="background: var(--color-background);">
+                <span class="inline-block px-3 py-1 text-xs font-medium mb-4 rounded-full" style="background: var(--color-brand-light); color: var(--color-brand-dark);">New Release</span>
+                <h1 class="text-4xl font-bold mb-4" style="color: var(--color-text-foreground);">Build something amazing</h1>
+                <p class="text-lg mb-8 max-w-xl mx-auto" style="color: var(--color-text-muted);">Create beautiful, responsive websites with our design system powered by carefully crafted tokens.</p>
+                <div class="flex items-center justify-center gap-4">
+                  <button class="px-6 py-3 text-sm font-medium text-white" style="background: var(--button-bg); border-radius: var(--button-radius);">Start Free Trial</button>
+                  <button class="px-6 py-3 text-sm font-medium border-2" style="color: var(--color-brand); border-color: var(--color-brand); border-radius: var(--button-radius); background: transparent;">Learn More</button>
+                </div>
+              </section>
+              
+              <!-- Mock Card Grid -->
+              <section class="px-8 py-12" style="background: var(--color-background-alt);">
+                <h2 class="text-2xl font-bold mb-8 text-center" style="color: var(--color-text-foreground);">Features</h2>
+                <div class="grid grid-cols-3 gap-6">
+                  
+                  <div class="p-6 border" style="background: var(--card-bg); border-color: var(--card-border); border-radius: var(--card-radius);">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: var(--color-brand-light);">
+                      <svg class="w-5 h-5" style="color: var(--color-brand);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                      </svg>
+                    </div>
+                    <h3 class="font-semibold mb-2" style="color: var(--color-text-foreground);">Lightning Fast</h3>
+                    <p class="text-sm" style="color: var(--color-text-muted);">Optimized for performance with lazy loading and efficient caching.</p>
+                  </div>
+                  
+                  <div class="p-6 border" style="background: var(--card-bg); border-color: var(--card-border); border-radius: var(--card-radius);">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: var(--color-secondary-light);">
+                      <svg class="w-5 h-5" style="color: var(--color-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                      </svg>
+                    </div>
+                    <h3 class="font-semibold mb-2" style="color: var(--color-text-foreground);">Secure</h3>
+                    <p class="text-sm" style="color: var(--color-text-muted);">Enterprise-grade security with end-to-end encryption.</p>
+                  </div>
+                  
+                  <div class="p-6 border" style="background: var(--card-bg); border-color: var(--card-border); border-radius: var(--card-radius);">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background: var(--color-brand-light);">
+                      <svg class="w-5 h-5" style="color: var(--color-brand);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"></path>
+                      </svg>
+                    </div>
+                    <h3 class="font-semibold mb-2" style="color: var(--color-text-foreground);">Flexible</h3>
+                    <p class="text-sm" style="color: var(--color-text-muted);">Customize everything to match your brand identity.</p>
+                  </div>
+                  
+                </div>
+              </section>
+              
+              <!-- Mock Form Section -->
+              <section class="px-8 py-12" style="background: var(--color-surface);">
+                <div class="max-w-md mx-auto">
+                  <h2 class="text-2xl font-bold mb-6 text-center" style="color: var(--color-text-foreground);">Contact Us</h2>
+                  <div class="space-y-4">
+                    <div>
+                      <label class="block text-sm font-medium mb-1" style="color: var(--color-text-foreground);">Name</label>
+                      <input type="text" placeholder="John Doe" class="w-full px-3 py-2 border text-sm" style="background: var(--input-bg); border-color: var(--input-border); border-radius: var(--input-radius); color: var(--color-text-foreground);">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-1" style="color: var(--color-text-foreground);">Email</label>
+                      <input type="email" placeholder="john@example.com" class="w-full px-3 py-2 border text-sm" style="background: var(--input-bg); border-color: var(--input-border); border-radius: var(--input-radius); color: var(--color-text-foreground);">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-1" style="color: var(--color-text-foreground);">Message</label>
+                      <textarea rows="3" placeholder="Your message..." class="w-full px-3 py-2 border text-sm resize-none" style="background: var(--input-bg); border-color: var(--input-border); border-radius: var(--input-radius); color: var(--color-text-foreground);"></textarea>
+                    </div>
+                    <button class="w-full px-4 py-2.5 text-sm font-medium text-white" style="background: var(--button-bg); border-radius: var(--button-radius);">Send Message</button>
+                  </div>
+                </div>
+              </section>
+              
+              <!-- Mock Footer -->
+              <footer class="px-8 py-8 border-t" style="border-color: var(--color-border); background: var(--color-background);">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded" style="background: var(--color-brand);"></div>
+                    <span class="text-sm" style="color: var(--color-text-muted);">© 2024 Acme Co. All rights reserved.</span>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <a href="#" class="text-sm" style="color: var(--color-text-subtle);">Privacy</a>
+                    <a href="#" class="text-sm" style="color: var(--color-text-subtle);">Terms</a>
+                    <a href="#" class="text-sm" style="color: var(--color-text-subtle);">Contact</a>
+                  </div>
+                </div>
+              </footer>
+              
+            </div>
+            <!-- END MOCKUP WEBSITE -->
+            
+          </div>
+        </div>
+      </div>
+      
+    </main>
+    
+    <!-- RIGHT PANEL: Inspector -->
+    <aside class="w-72 bg-gray-900 border-l border-gray-800 flex flex-col overflow-hidden">
+      <div class="p-4 border-b border-gray-800">
+        <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Token Inspector</h2>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+        
+        <!-- Selected Element -->
+        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700/50">
+          <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">Selected Element</div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+              </svg>
+          </div>
+            <div>
+              <div class="font-medium text-white">Button Primary</div>
+              <div class="text-xs text-gray-500">Background color</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resolved Value - MOVED HERE -->
+        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700/50">
+          <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">Resolved Value</div>
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-xl shadow-lg ring-1 ring-white/10" style="background: var(--color-brand);"></div>
+            <div class="flex-1">
+              <div class="font-mono text-base text-white">#34d399</div>
+              <div class="text-xs text-gray-500 mt-0.5">rgb(52, 211, 153)</div>
+            </div>
+          </div>
+          <button class="mt-4 w-full px-3 py-2 text-sm text-gray-300 hover:text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            Copy Value
+          </button>
+        </div>
+        
+        <!-- Token Chain Visualization - REDESIGNED -->
+        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700/50">
+          <div class="text-xs text-gray-500 uppercase tracking-wider mb-4">Token Chain</div>
+          
+          <div class="space-y-3">
+          <!-- Component Layer -->
+            <div class="token-card group relative bg-gray-850 rounded-lg p-3 border-l-4 border-emerald-500 hover:bg-gray-800/80 transition-colors">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-emerald-400 uppercase tracking-wider font-medium mb-1">Component</div>
+                  <div class="font-mono text-sm text-white">Text.Heading</div>
+            </div>
+                <svg class="w-4 h-4 text-gray-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Connector -->
+            <div class="flex justify-center">
+              <svg class="w-4 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+              </svg>
+          </div>
+          
+          <!-- Semantic Layer -->
+            <div class="token-card group relative bg-gray-850 rounded-lg p-3 border-l-4 border-violet-500 hover:bg-gray-800/80 transition-colors">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-violet-400 uppercase tracking-wider font-medium mb-1">Semantic</div>
+                  <div class="font-mono text-sm text-white">Color.Foreground</div>
+              <div class="text-xs text-gray-500 mt-1">Light mode</div>
+                </div>
+                <svg class="w-4 h-4 text-gray-600 group-hover:text-violet-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </div>
+          </div>
+          
+            <!-- Connector -->
+            <div class="flex justify-center">
+              <svg class="w-4 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+              </svg>
+          </div>
+          
+            <!-- Primitive Layer -->
+            <div class="token-card group relative bg-gray-850 rounded-lg p-3 border-l-4 border-blue-500 hover:bg-gray-800/80 transition-colors">
+              <div class="flex items-center justify-between">
+              <div>
+                  <div class="text-xs text-blue-400 uppercase tracking-wider font-medium mb-1">Primitive</div>
+                  <div class="font-mono text-sm text-white">Color.Gray.900</div>
+              </div>
+                <div class="w-5 h-5 rounded border border-gray-600" style="background: #111827;"></div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+        <!-- Affected Components -->
+        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700/50">
+          <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">Also Uses This Token</div>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 px-3 py-2 bg-gray-850 rounded-lg text-sm text-gray-300 hover:bg-gray-700 cursor-pointer transition-colors">
+              <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+              <span>Body Text</span>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-2 bg-gray-850 rounded-lg text-sm text-gray-300 hover:bg-gray-700 cursor-pointer transition-colors">
+              <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+              <span>Form Labels</span>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+      <!-- Export Options Footer -->
+      <div class="p-4 border-t border-gray-700/50 bg-gray-800/50">
+        <div class="text-xs text-gray-500 uppercase tracking-wider mb-3">Quick Export</div>
+        <div class="space-y-2">
+          <button class="w-full px-3 py-2.5 text-sm text-left bg-gray-850 hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-3 border border-gray-700/50">
+          <svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15.332 8.668a3.333 3.333 0 100 6.665 3.333 3.333 0 000-6.665zm-6.665 0a3.333 3.333 0 100 6.665 3.333 3.333 0 000-6.665z"/>
+          </svg>
+          <span class="text-gray-300">Figma Variables JSON</span>
+        </button>
+          <button class="w-full px-3 py-2.5 text-sm text-left bg-gray-850 hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-3 border border-gray-700/50">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+          </svg>
+          <span class="text-gray-300">CSS Variables</span>
+        </button>
+          <button class="w-full px-3 py-2.5 text-sm text-left bg-gray-850 hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-3 border border-gray-700/50">
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="text-gray-300">Design Tokens JSON</span>
+        </button>
+        </div>
+      </div>
+      
+    </aside>
+    
+  </div>
+
+  <script>
+    // Simple panel toggle functionality
+    function togglePanel(panelId) {
+      const panel = document.getElementById(panelId + '-panel');
+      const chevron = document.getElementById(panelId + '-chevron');
+      
+      if (panel.classList.contains('collapsed')) {
+        panel.classList.remove('collapsed');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+        chevron.classList.remove('rotate-180');
+      } else {
+        panel.classList.add('collapsed');
+        panel.style.maxHeight = '0';
+        chevron.classList.add('rotate-180');
+      }
+    }
+
+    // Initialize panels (colors and radius open, typography closed)
+    document.addEventListener('DOMContentLoaded', function() {
+      const colorsPanel = document.getElementById('colors-panel');
+      const radiusPanel = document.getElementById('radius-panel');
+      
+      colorsPanel.style.maxHeight = colorsPanel.scrollHeight + 'px';
+      radiusPanel.style.maxHeight = radiusPanel.scrollHeight + 'px';
+    });
+
+    // Demo: Color swatch selection
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', function() {
+        // Remove selected from siblings
+        this.parentElement.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+        // Add selected to clicked
+        this.classList.add('selected');
+      });
+    });
+  </script>
+  
+</body>
+</html>
